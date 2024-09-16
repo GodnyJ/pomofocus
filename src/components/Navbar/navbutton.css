@@ -1,0 +1,29 @@
+.navbutton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.9;
+    background-color:  rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+    margin-left: 10px;
+    font-size: 13px;
+    padding: 8px 12px;
+    min-width: 70px;
+    border: none;
+    color: white;
+}
+
+
+.navbutton img {
+    width: 20px;
+    margin-right: 4px;
+}
+
+.navbar__menu--lastbtn {
+    min-width: 0px;
+    max-width: 36px;
+    padding-left: 16px !important;
+}
