@@ -24,6 +24,8 @@ function ToggleButton({isActiveToggle, setIsActiveToggle, functionToCall}) {
 }
 
 export default function Settings({
+        onDataReady,
+
         handleSettingsClick, 
         setPomodoroTime, 
         pomodoroTime, 
@@ -39,6 +41,7 @@ export default function Settings({
     }
 
     const handleOkButton = () => {
+        onDataReady({initialPomodoroTime: 60})
         handleSettingsClick();
         console.log(pomodoroTime)
     }
