@@ -1,11 +1,12 @@
 import React from "react";
 import "./addEditTaskForm.css"
 
-export default function AddEditTaskForm({addTask, handleTaskInputChange, newTask, pomodoroCount, increasePomodoroCount, decreasePomodoroCount, }) {
+export default function AddEditTaskForm({addTask, handleTaskInputChange, newTask, pomodoroCount, increasePomodoroCount, decreasePomodoroCount, handlePomodoroInput}) {
     
     return (
         <div className="form-box">
             <div className="form__up-site">
+                {/* <p style={{color:"black"}}>{newTask}</p> */}
                 <input 
                     className="form-input__task-name"
                     type="text"
@@ -16,8 +17,16 @@ export default function AddEditTaskForm({addTask, handleTaskInputChange, newTask
 
                 <span className="form__title-est-pom">Est Pomodoros</span>
 
+                {/* Pomodoro counter */}
                 <div className="form__pom-settings">
-                    <input type="number" min="0" step="1" value={pomodoroCount}/>
+                    <input 
+                        type="number" 
+                        min="0" 
+                        step="1" 
+                        onChange={handlePomodoroInput}
+                        value={pomodoroCount} 
+                        readOnly
+                    />
                     <div className="form-btns__pom-settins">
                         <button className="form-btn_pom-settins--up" onClick={increasePomodoroCount}><img src="icons/caret-up.png" alt="up icon"/></button>
                         <button className="form-btn_pom-settins--down" onClick={decreasePomodoroCount} ><img src="icons/caret-down.png" alt="down icon"/></button>

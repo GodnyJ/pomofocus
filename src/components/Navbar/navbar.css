@@ -38,3 +38,9 @@
     display: flex;
     align-items: center;
 }
+
+.line-under-navbar {
+    height: 1px;
+    background-color: rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+  }

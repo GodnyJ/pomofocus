@@ -79,16 +79,16 @@
 
 /* ukrycie domyślnych spin buttons w inpucie */
 /* Dla przeglądarek WebKit (np. Chrome, Safari) */
-input[type="number"]::-webkit-outer-spin-button,
+/* input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
-}
+} */
 
 /* Dla przeglądarek Firefox */
-input[type="number"] {
-    -moz-appearance: textfield;
-}
+/* input[type="number"] { */
+    /* -moz-appearance: textfield; */
+/* } */
 
 /* ------------------------------------ */
 
