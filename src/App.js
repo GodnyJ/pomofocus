@@ -27,7 +27,7 @@ export default function App() {
   };
 
   const mode = config[currentMode];
-//zrobić zamist current time, elapsedTime - czas który upłyną
+//zrobić zamist current time, elapsedTime - czas który upłynął
 
   const [currentTime, setCurrentTime] = useState(mode.initialTime);
   // const [currentColor, setCurrentColor] = useState(mode.color);
@@ -54,7 +54,7 @@ export default function App() {
 
   const handleAutoCheckTasks = () => {
     console.log({tasks});
-    // if (isActiveToggle === true) { //nie robiłabym już ifa skoro jest w handleToggleClick wywołyanie funckji tylko jak jest true
+    // if (isActiveToggle === true) { 
       const updatedTasks = tasks.map((task) => {
         return task.pomodoroCount === task.completedPomodoros
           ? { ...task, isDone: true }
