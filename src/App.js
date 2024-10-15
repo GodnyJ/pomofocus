@@ -43,11 +43,50 @@ export default function App() {
 
   //Settings.js
   // const [pomodoroTime, setPomodoroTime] = useState(25);
-  const [isActiveToggle, setIsActiveToggle] = useState(false);
+  // const [isActiveToggle, setIsActiveToggle] = useState(false);
 
-  // const handleTimerChange1 = () => {
-  //   if text == 
-  // }
+  //na 15.10 z toggleButton
+  const handleAutoStartBreaks = () => {
+    setIsTimerRunning(true);
+  };
+
+  const handleAutoCheckTasks = () => {
+    // if (isActiveToggle === true) { //nie robiłabym już ifa skoro jest w handleToggleClick wywołyanie funckji tylko jak jest true
+      const updatedTasks = tasks.map((task) => {
+        return task.pomodoroCount === task.completedPomodoros
+          ? { ...task, isDone: true }
+          : task;
+      });
+      setTasks(updatedTasks);
+    // }
+  };
+
+  const [toggles, setToggles] = useState({
+    autoStartBreaks: {name: "Auto Start Breaks", isClicked: false, functionToCall: handleAutoStartBreaks},
+    autoCheckTasks: {name: "Auto Check Tasks", isClicked: false, functionToCall: handleAutoCheckTasks}
+  })  
+
+
+
+
+  const handleToggleClick = (toggleName) => {
+    setToggles((prevToggles) => {
+        const newToggles = {
+          ...prevToggles,
+          [toggleName]: {
+            ...prevToggles[toggleName],
+            isClicked: !prevToggles[toggleName].isClicked,
+          },
+        };
+      
+        if (newToggles[toggleName].isClicked === true ) {
+          newToggles[toggleName].functionToCall();
+        }
+      
+        return newToggles; //muszę? 
+      }); 
+  };
+  //---------------------------------------------------
 
   const handleTimerChange1 = (modeName) => {
     const selectedMode = config[modeName];
@@ -158,26 +197,6 @@ export default function App() {
     setIsSettingsClicked(!isSettingsClicked);
   };
 
-  //Settings
-  const handleAutoStartBreaks = () => {
-    // console.log(`isActiveToggle: ${isActiveToggle}, isBreak: ${isBreak}`);
-    if (isActiveToggle === true) {
-      setIsTimerRunning(true);
-      console.log("zegar powinien się odpalić jak jesteśmy w trybie przerwy");
-    }
-  };
-
-  const handleAutoCheckTasks = () => {
-    if (isActiveToggle === true) {
-      const updatedTasks = tasks.map((task) => {
-        return task.pomodoroCount === task.completedPomodoros
-          ? { ...task, isDone: true }
-          : task;
-      });
-      setTasks(updatedTasks);
-    }
-  };
-
   return (
     <main>
       <div id="target">
@@ -265,8 +284,10 @@ export default function App() {
               handleSettingsClick={handleSettingsClick}
               // setPomodoroTime={setPomodoroTime}
               // pomodoroTime={pomodoroTime}
-              isActiveToggle={isActiveToggle}
-              setIsActiveToggle={setIsActiveToggle}
+              // isActiveToggle={isActiveToggle}
+              // setIsActiveToggle={setIsActiveToggle}
+              toggles={toggles}
+              handleToggleClick={handleToggleClick}
               handleAutoStartBreaks={handleAutoStartBreaks}
               handleAutoCheckTasks={handleAutoCheckTasks}
             />

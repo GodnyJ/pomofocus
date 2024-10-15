@@ -3,42 +3,49 @@ import './settings.css';
 import DropdownSelect from "./DropdownSelect";
 import { useState } from 'react';
 
-function ToggleButton({isActiveToggle, setIsActiveToggle, functionToCall}) {
+function ToggleButton({isActiveToggle, functionToCall}) {
 
     //nowe--------------------------------------
-    const [toggles, setToggles] = useState({
-        autoStartBreaks: {name: "Auto Start Breaks", isClicked: false, functionToCall: handleAutoStartBreaks},
-        autoCheckTasks: {name: "Auto Check Tasks", isClicked: false, functionToCall: handleAutoCheckTasks}
-    })  
+    //przeniosłam do settings - czy powinnam?
+    // const [toggles, setToggles] = useState({
+    //     autoStartBreaks: {name: "Auto Start Breaks", isClicked: false, functionToCall: handleAutoStartBreaks},
+    //     autoCheckTasks: {name: "Auto Check Tasks", isClicked: false, functionToCall: handleAutoCheckTasks}
+    // })  
 
-    const handleToggleClick = (toggleName) => {
-        setToggles((prevToggles) => ({
-            ...prevToggles, 
-            [toggleName]: {
-                ...prevToggles[toggleName],
-                isClicked: !prevToggles[toggleName].isClicked,
-            },
-        }));
-
-        if(toggles[toggleName].isClicked) {
-            toggles[toggleName].functionToCall();
-        }
-      };
+    // const handleToggleClick = (toggleName) => {
+    //     setToggles((prevToggles) => {
+    //         const newToggles = {
+    //           ...prevToggles,
+    //           [toggleName]: {
+    //             ...prevToggles[toggleName],
+    //             isClicked: !prevToggles[toggleName].isClicked,
+    //           },
+    //         };
+          
+    //         if (newToggles[toggleName].isClicked === true ) {
+    //           newToggles[toggleName].functionToCall();
+    //         }
+          
+    //         return newToggles; //muszę? 
+    //       }); 
+    //   };
      //---------------------------------------- 
 
-    const handleClickToggleButton = () => {
-        setIsActiveToggle(!isActiveToggle)
+     //stare--------------------
+    // const handleClickToggleButton = () => {
+    //     setIsActiveToggle(!isActiveToggle)
 
-        console.log(isActiveToggle)
+    //     console.log(isActiveToggle)
 
-        if (isActiveToggle === true) {
-            functionToCall();
-            console.log('powinno wywołać funkcję function to call')
-        }
-    };
+    //     if (isActiveToggle === true) {
+    //         functionToCall();
+    //         console.log('powinno wywołać funkcję function to call')
+    //     }
+    // };
+    //---------------------
 
     return (
-        <div className={`settings__toggle-btn ${isActiveToggle ? 'settings__toggle-btn-active' : ''}`} onClick={handleClickToggleButton}>
+        <div className={`settings__toggle-btn ${isActiveToggle ? 'settings__toggle-btn-active' : ''}`} onClick={functionToCall}>
             <div className={`settings__toggle-btn--circle ${isActiveToggle ? 'settings__toggle-btn--circle-active' : ''}`}></div>
         </div>
     )
@@ -46,14 +53,18 @@ function ToggleButton({isActiveToggle, setIsActiveToggle, functionToCall}) {
 
 export default function Settings({
         onDataReady,
+
+        toggles,
+        // handleAutoStartBreaks, tego nie potrzebuję bo handle toggle tutaj wywołuje  nazwą a nie tą fnckją 
+        // handleAutoCheckTasks,
+        handleToggleClick,
+        
         
         handleSettingsClick, 
         // setPomodoroTime, 
         // pomodoroTime, 
-        isActiveToggle,
-        setIsActiveToggle,
-        handleAutoStartBreaks,
-        handleAutoCheckTasks
+        // isActiveToggle,
+        // setIsActiveToggle
     }) {
 
 
@@ -112,11 +123,11 @@ export default function Settings({
 
                         <div className="settings__item">
                             <span>Auto Start Breaks</span>
-                            <ToggleButton isActiveToggle={isActiveToggle} setIsActiveToggle={setIsActiveToggle} functionToCall={handleAutoStartBreaks}/>
+                            <ToggleButton isActiveToggle={toggles.autoStartBreaks.isClicked} functionToCall={() => handleToggleClick('autoStartBreaks')}/>
                         </div>
                         <div className="settings__item">
                             <span>Auto Start Pomodoros</span>
-                            {/* <ToggleButton isActiveToggle={isActiveToggle} setIsActiveToggle={setIsActiveToggle} functionToCall={handleAutoStartPomodoro}/> */}
+                            {/* <ToggleButton isActiveToggle={toggles.autoStartBreaks.isClicked} functionToCall={handleAutoStartPomodoro}/> */}
                         </div>
                         <div className="settings__item">
                             <span>Long Break interval</span>
@@ -132,7 +143,7 @@ export default function Settings({
 
                         <div className="settings__item">
                             <span>Auto Check Tasks</span>
-                            <ToggleButton isActiveToggle={isActiveToggle} setIsActiveToggle={setIsActiveToggle} functionToCall={handleAutoCheckTasks}/>
+                            <ToggleButton isActiveToggle={toggles.autoCheckTasks.isClicked} functionToCall={() => handleToggleClick('autoCheckTasks')}/>
                         </div>
                         <div className="settings__item">
                             <span>Auto Switch Tasks</span>
