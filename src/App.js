@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Checklist from "./components/Checklist/Checklist";
 import Navbar from "./components/Navbar/Navbar";
 // import Timer from "./components/Timer/Timer";
@@ -33,6 +33,9 @@ export default function App() {
   const [currentTime, setCurrentTime] = useState(mode.initialTime);
   const [currentColor, setCurrentColor] = useState(mode.color);
 
+  useEffect(() => {
+    setCurrentTime(mode.initialTime);
+  },[mode.initialTime])
 
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   // const [isBreak, setIsBreak] = useState(false);
