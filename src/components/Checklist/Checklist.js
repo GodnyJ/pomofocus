@@ -15,8 +15,9 @@ export default function Checklist({tasks, setTasks, backgroundColor, clickedLiEl
         }
 
         const newTaskObj = {
+            id: Date.now(),
             text: newTask,
-            index: tasks.length,
+            // index: tasks.length,
             pomodoroCount: pomodoroCount,
             completedPomodoros: 0,
             isDone: false
@@ -39,10 +40,10 @@ export default function Checklist({tasks, setTasks, backgroundColor, clickedLiEl
     const showTaskForm = () => {
         setIsAddingTask(true);
     }
-
-    const handleChangeIsDoneValue = (index) => { 
-        const updatedTask = tasks.map((task) =>
-            task.index === index ? { ...task, isDone: !task.isDone } : task
+//zmienić z index na id tutaj i w zaznaczaniu zadania 
+    const handleChangeIsDoneValue = (taskIndex) => { 
+        const updatedTask = tasks.map((task, index) =>
+            taskIndex === index ? { ...task, isDone: !task.isDone } : task
         );
         setTasks(updatedTask); 
     }

@@ -24,23 +24,22 @@ export default function App() {
       ...oldConfig,
       [modeName]: { ...oldConfig[modeName], initialTime: initialPomodoroTime },
     }));
-    console.log(config);
   };
 
-  const mode = config[currentMode]; //config.pomodoro
+  const mode = config[currentMode];
 //zrobić zamist current time, elapsedTime - czas który upłyną
 
   const [currentTime, setCurrentTime] = useState(mode.initialTime);
-  const [currentColor, setCurrentColor] = useState(mode.color);
+  // const [currentColor, setCurrentColor] = useState(mode.color);
+
+  const currentColor = mode.color;
 
   useEffect(() => {
     setCurrentTime(mode.initialTime);
   },[mode.initialTime])
 
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  // const [isBreak, setIsBreak] = useState(false);
-  const [isSettingsClicked, setIsSettingsClicked] = useState(false);
-  // Checklist.js
+  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [clickedLiElementIndex, setClickedLiElementIndex] = useState(0);
 
@@ -54,12 +53,14 @@ export default function App() {
   };
 
   const handleAutoCheckTasks = () => {
+    console.log({tasks});
     // if (isActiveToggle === true) { //nie robiłabym już ifa skoro jest w handleToggleClick wywołyanie funckji tylko jak jest true
       const updatedTasks = tasks.map((task) => {
         return task.pomodoroCount === task.completedPomodoros
           ? { ...task, isDone: true }
           : task;
       });
+      
       setTasks(updatedTasks);
     // }
   };
@@ -68,9 +69,6 @@ export default function App() {
     autoStartBreaks: {name: "Auto Start Breaks", isClicked: false, functionToCall: handleAutoStartBreaks},
     autoCheckTasks: {name: "Auto Check Tasks", isClicked: false, functionToCall: handleAutoCheckTasks}
   })  
-
-
-
 
   const handleToggleClick = (toggleName) => {
     setToggles((prevToggles) => {
@@ -95,21 +93,12 @@ export default function App() {
     const selectedMode = config[modeName];
 
     setCurrentTime(selectedMode.initialTime);
-    setCurrentColor(selectedMode.color);
+    // setCurrentColor(selectedMode.color);
     setCurrentMode(modeName)
     console.log(currentMode)
     console.log(currentColor)
     console.log(selectedMode.color)
   }
-
-//test1
-  // const handleTimerChange1 = (time, bgc) => {
-  //   setCurrentTime(time);
-  //   setCurrentColor(bgc);
-  //   setIsTimerRunning(fal1se);
-  //   console.log(bgc);
-  //   console.log(currentMode)
-  // }1;
 
   const handleStartClick = () => {
     if (currentTime !== 0) {
@@ -131,28 +120,7 @@ export default function App() {
     }
   };
 
-  //final - na 15.10 ale świruje jak 1
-  const handleNextClick2 = () => {
-    if(currentMode === 'pomodoro') {
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.index === clickedLiElementIndex
-            ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
-            : task
-        )
-      );
-    }
 
-    const nextMode = currentMode === "pomodoro" 
-      ? "shortBreak" //jeśli current mode to pomodoro to ustaw next mode na shortB jeśli nie to przejdź do kolejnego warunku
-      : currentMode === "shortBreak"
-      ? "pomodoro" 
-      : "pomodoro"; // Zmieniamy tryb po długiej przerwie również na "pomodoro"
-
-      setCurrentMode(nextMode)
-      handleTimerChange1(mode.initialTime, mode.color)
-      console.log(currentMode);
-  }
 
   //aktualnie w użyciu 
   const handleNextClick1 = () => {
@@ -165,6 +133,7 @@ export default function App() {
         )
       );
 
+//switch
       handleTimerChange1('shortBreak');
       // setCurrentMode("shortBreak")
     } else if (currentMode === 'shortBreak') {
@@ -177,27 +146,8 @@ export default function App() {
   
   } 
 
-  // test1
-  // const handleNextClick = () => {
-  //   // Sprawdam czy nie jesteśmy na przerwie
-  //   if (!isBreak) {
-  //     setTasks((prevTasks) =>
-  //       prevTasks.map((task) =>
-  //         task.index === clickedLiElementIndex
-  //           ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
-  //           : task
-  //       )
-  //     );
-  //     handleTimerChange(5, "rgb(56, 133, 138)");
-  //     setIsBreak(true);
-  //   } else {
-  //     handleTimerChange({ pomodoroTime }, "rgb(186, 73, 73)");
-  //     setIsBreak(false);
-  //   }
-  // };
-
   const handleSettingsClick = () => {
-    setIsSettingsClicked(!isSettingsClicked);
+    setIsSettingsDialogOpen(!isSettingsDialogOpen);
   };
 
   return (
@@ -281,7 +231,7 @@ export default function App() {
               </div>
             </div>
           </div>
-          {isSettingsClicked && (
+          {isSettingsDialogOpen && (
             <Settings
               onDataReady={processSettingsData}
               handleSettingsClick={handleSettingsClick}
