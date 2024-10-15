@@ -7,47 +7,67 @@ import TimerMenuBtn from "./components/Timer/TimerMenuBtn";
 import "./App.css";
 import "./components/Timer/timer.css";
 import Settings from "./components/Navbar/Settings";
+import { isValidInputTimeValue } from "@testing-library/user-event/dist/utils";
 
 export default function App() {
+
   const [currentMode, setCurrentMode] = useState("pomodoro");
   const [config, setConfig] = useState({
-    pomodoro: { initialTime: 25, color: "rgb(186, 73, 73)" },
-    shortBreak: {},
-    longBreak: {},
+    pomodoro: {initialTime: 25, color: "rgb(186, 73, 73)"},
+    shortBreak: {initialTime: 5, color: "rgb(56, 133, 138)"},
+    longBreak: {initialTime: 10, color: "rgb(57, 112, 151)"},
   });
 
-  const processSettingsData = ({ initialPomodoroTime }) => {
-    console.log()
+  // funkcja, która ustawia initialValue w config
+  const processSettingsData = (modeName,{ initialPomodoroTime }) => { //dlaczego tu przyjmujemy obiekt?, modename to nazwa trybu
     setConfig((oldConfig) => ({
       ...oldConfig,
-      pomodoro: { ...oldConfig.pomodoro, initialTime: initialPomodoroTime },
+      [modeName]: { ...oldConfig[modeName], initialTime: initialPomodoroTime },
     }));
+    console.log(config);
   };
 
+  const mode = config[currentMode]; //config.pomodoro
+//zrobić zamist current time, elapsedTime - czas który upłyną
 
-  
-  const [currentTime, setCurrentTime] = useState(
-    config[currentMode].initialTime
-  );
-  const [backgroundColor, setBackgroundColor] = useState(
-    config[currentMode].color
-  );
+  const [currentTime, setCurrentTime] = useState(mode.initialTime);
+  const [currentColor, setCurrentColor] = useState(mode.color);
+
+
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [isBreak, setIsBreak] = useState(false);
+  // const [isBreak, setIsBreak] = useState(false);
   const [isSettingsClicked, setIsSettingsClicked] = useState(false);
   // Checklist.js
   const [tasks, setTasks] = useState([]);
   const [clickedLiElementIndex, setClickedLiElementIndex] = useState(0);
 
   //Settings.js
-  const [pomodoroTime, setPomodoroTime] = useState(25);
+  // const [pomodoroTime, setPomodoroTime] = useState(25);
   const [isActiveToggle, setIsActiveToggle] = useState(false);
 
-  const handleTimerChange = (time, bgc) => {
-    setCurrentTime(time);
-    setBackgroundColor(bgc);
-    setIsTimerRunning(false);
-  };
+  // const handleTimerChange1 = () => {
+  //   if text == 
+  // }
+
+  const handleTimerChange1 = (modeName) => {
+    const selectedMode = config[modeName];
+
+    setCurrentTime(selectedMode.initialTime);
+    setCurrentColor(selectedMode.color);
+    setCurrentMode(modeName)
+    console.log(currentMode)
+    console.log(currentColor)
+    console.log(selectedMode.color)
+  }
+
+//test1
+  // const handleTimerChange1 = (time, bgc) => {
+  //   setCurrentTime(time);
+  //   setCurrentColor(bgc);
+  //   setIsTimerRunning(fal1se);
+  //   console.log(bgc);
+  //   console.log(currentMode)
+  // }1;
 
   const handleStartClick = () => {
     if (currentTime !== 0) {
@@ -69,10 +89,9 @@ export default function App() {
     }
   };
 
-  // DO POPRAWY w trybie long break
-  const handleNextClick = () => {
-    // Sprawdam czy nie jesteśmy na przerwie
-    if (!isBreak) {
+  //final - na 15.10 ale świruje jak 1
+  const handleNextClick2 = () => {
+    if(currentMode === 'pomodoro') {
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
           task.index === clickedLiElementIndex
@@ -80,13 +99,60 @@ export default function App() {
             : task
         )
       );
-      handleTimerChange(5, "rgb(56, 133, 138)");
-      setIsBreak(true);
-    } else {
-      handleTimerChange({ pomodoroTime }, "rgb(186, 73, 73)");
-      setIsBreak(false);
     }
-  };
+
+    const nextMode = currentMode === "pomodoro" 
+      ? "shortBreak" //jeśli current mode to pomodoro to ustaw next mode na shortB jeśli nie to przejdź do kolejnego warunku
+      : currentMode === "shortBreak"
+      ? "pomodoro" 
+      : "pomodoro"; // Zmieniamy tryb po długiej przerwie również na "pomodoro"
+
+      setCurrentMode(nextMode)
+      handleTimerChange1(mode.initialTime, mode.color)
+      console.log(currentMode);
+  }
+
+  //aktualnie w użyciu 
+  const handleNextClick1 = () => {
+    if(currentMode === 'pomodoro') {
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task.index === clickedLiElementIndex
+            ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
+            : task
+        )
+      );
+
+      handleTimerChange1('shortBreak');
+      // setCurrentMode("shortBreak")
+    } else if (currentMode === 'shortBreak') {
+      handleTimerChange1('pomodoro');
+      // setCurrentMode("pomodoro")
+    } else if (currentMode === 'longBreak') {
+      handleTimerChange1('pomodoro');
+      // setCurrentMode("pomodoro")
+    }
+  
+  } 
+
+  // test1
+  // const handleNextClick = () => {
+  //   // Sprawdam czy nie jesteśmy na przerwie
+  //   if (!isBreak) {
+  //     setTasks((prevTasks) =>
+  //       prevTasks.map((task) =>
+  //         task.index === clickedLiElementIndex
+  //           ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
+  //           : task
+  //       )
+  //     );
+  //     handleTimerChange(5, "rgb(56, 133, 138)");
+  //     setIsBreak(true);
+  //   } else {
+  //     handleTimerChange({ pomodoroTime }, "rgb(186, 73, 73)");
+  //     setIsBreak(false);
+  //   }
+  // };
 
   const handleSettingsClick = () => {
     setIsSettingsClicked(!isSettingsClicked);
@@ -94,7 +160,7 @@ export default function App() {
 
   //Settings
   const handleAutoStartBreaks = () => {
-    console.log(`isActiveToggle: ${isActiveToggle}, isBreak: ${isBreak}`);
+    // console.log(`isActiveToggle: ${isActiveToggle}, isBreak: ${isBreak}`);
     if (isActiveToggle === true) {
       setIsTimerRunning(true);
       console.log("zegar powinien się odpalić jak jesteśmy w trybie przerwy");
@@ -102,7 +168,6 @@ export default function App() {
   };
 
   const handleAutoCheckTasks = () => {
-    //i teraz gdzie to wywołać?????????????????????????
     if (isActiveToggle === true) {
       const updatedTasks = tasks.map((task) => {
         return task.pomodoroCount === task.completedPomodoros
@@ -116,7 +181,7 @@ export default function App() {
   return (
     <main>
       <div id="target">
-        <div className="app-box1" style={{ backgroundColor: backgroundColor }}>
+        <div className="app-box1" style={{ backgroundColor: currentColor }}>
           <div className="app-box2">
             <div className="navbar-div">
               <Navbar handleSettingsClick={handleSettingsClick} />
@@ -130,21 +195,24 @@ export default function App() {
                     <div className="timer__menu">
                       <TimerMenuBtn
                         text={"Pomodoro"}
-                        time={config.pomodoro.initialTime}
-                        bgc={"rgb(186, 73, 73)"}
-                        handleTimerChange={handleTimerChange}
+                        modeName={"pomodoro"}
+                        // time={config.pomodoro.initialTime}
+                        // bgc={config.pomodoro.color}
+                        handleTimerChange={handleTimerChange1}
                       />
                       <TimerMenuBtn
                         text={"Short Break"}
-                        time={5}
-                        bgc={"rgb(56, 133, 138)"}
-                        handleTimerChange={handleTimerChange}
+                        modeName={"shortBreak"}
+                        // time={config.shortBreak.initialTime}
+                        // bgc={config.shortBreak.color}
+                        handleTimerChange={handleTimerChange1}
                       />
                       <TimerMenuBtn
                         text={"Long Break"}
-                        time={10}
-                        bgc={"rgb(57, 112, 151)"}
-                        handleTimerChange={handleTimerChange}
+                        modeName={"longBreak"}
+                        // time={config.longBreak.initialTime}
+                        // bgc={config.longBreak.color}
+                        handleTimerChange={handleTimerChange1}
                       />
                     </div>
                     {/* Licznik */}
@@ -161,7 +229,7 @@ export default function App() {
                           isTimerRunning ? "timer__button--start-active" : ""
                         }`}
                         onClick={handleStartClick}
-                        style={{ color: backgroundColor }}
+                        style={{ color: currentColor }}
                       >
                         {isTimerRunning ? "Pause" : "Start"}
                       </button>
@@ -170,7 +238,7 @@ export default function App() {
                       {isTimerRunning ? (
                         <button
                           className="timer__button--next"
-                          onClick={handleNextClick}
+                          onClick={handleNextClick1}
                         >
                           <img
                             src="icons/next-white3.png"
@@ -184,7 +252,7 @@ export default function App() {
                 <Checklist
                   tasks={tasks}
                   setTasks={setTasks}
-                  backgroundColor={backgroundColor}
+                  backgroundColor={currentColor}
                   clickedLiElementIndex={clickedLiElementIndex}
                   setClickedLiElementIndex={setClickedLiElementIndex}
                 />
@@ -195,8 +263,8 @@ export default function App() {
             <Settings
               onDataReady={processSettingsData}
               handleSettingsClick={handleSettingsClick}
-              setPomodoroTime={setPomodoroTime}
-              pomodoroTime={pomodoroTime}
+              // setPomodoroTime={setPomodoroTime}
+              // pomodoroTime={pomodoroTime}
               isActiveToggle={isActiveToggle}
               setIsActiveToggle={setIsActiveToggle}
               handleAutoStartBreaks={handleAutoStartBreaks}

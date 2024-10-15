@@ -1,9 +1,30 @@
 import React from "react";
 import './settings.css';
 import DropdownSelect from "./DropdownSelect";
-// import { useState } from 'react';
+import { useState } from 'react';
 
 function ToggleButton({isActiveToggle, setIsActiveToggle, functionToCall}) {
+
+    //nowe--------------------------------------
+    const [toggles, setToggles] = useState({
+        autoStartBreaks: {name: "Auto Start Breaks", isClicked: false, functionToCall: handleAutoStartBreaks},
+        autoCheckTasks: {name: "Auto Check Tasks", isClicked: false, functionToCall: handleAutoCheckTasks}
+    })  
+
+    const handleToggleClick = (toggleName) => {
+        setToggles((prevToggles) => ({
+            ...prevToggles, 
+            [toggleName]: {
+                ...prevToggles[toggleName],
+                isClicked: !prevToggles[toggleName].isClicked,
+            },
+        }));
+
+        if(toggles[toggleName].isClicked) {
+            toggles[toggleName].functionToCall();
+        }
+      };
+     //---------------------------------------- 
 
     const handleClickToggleButton = () => {
         setIsActiveToggle(!isActiveToggle)
@@ -25,27 +46,40 @@ function ToggleButton({isActiveToggle, setIsActiveToggle, functionToCall}) {
 
 export default function Settings({
         onDataReady,
-
+        
         handleSettingsClick, 
-        setPomodoroTime, 
-        pomodoroTime, 
+        // setPomodoroTime, 
+        // pomodoroTime, 
         isActiveToggle,
         setIsActiveToggle,
         handleAutoStartBreaks,
         handleAutoCheckTasks
     }) {
 
+
+    //na 15.10
+    const [pomodoroTime, setPomodoroTime] = useState(25); 
+    const [shortBreakTime, setShortBreakTime] = useState(5);
+    const [longBreakTime, setLongBreakTime] = useState(10);
+
     const handlePomodoroTimeInputChange = (e) => {
         setPomodoroTime(e.target.value);
-        console.log(pomodoroTime)
+    }
+    const handleShortBreakTimeInputChange = (e) => {
+        setShortBreakTime(e.target.value);
+    }
+    const handleLongBreakTimeInputChange = (e) => {
+        setLongBreakTime(e.target.value);
     }
 
     const handleOkButton = () => {
-        onDataReady({initialPomodoroTime: 60})
+        onDataReady("pomodoro",{initialPomodoroTime: pomodoroTime})
+        onDataReady("shortBreak",{initialPomodoroTime: shortBreakTime})
+        onDataReady("longBreak",{initialPomodoroTime: longBreakTime})
         handleSettingsClick();
-        console.log(pomodoroTime)
+        // console.log(pomodoroTime)
     }
-
+    //tu koniec
 
     return (
         <div className="settings-box2">
@@ -64,15 +98,15 @@ export default function Settings({
                         <div className="settings__timer-box">
                             <div>
                                 <label>Pomodoro</label>
-                                <input className="input__number" type="number" defaultValue={pomodoroTime}  min="0" step="1" onChange={handlePomodoroTimeInputChange}/>
+                            <input className="input__number" type="number" defaultValue={pomodoroTime}  min="0" step="1" onChange={handlePomodoroTimeInputChange}/>
                             </div>
                             <div>
                                 <label>Short Break</label>
-                                <input className="input__number" type="number" defaultValue={5}  min="0" step="1"/>
+                                <input className="input__number" type="number" defaultValue={shortBreakTime}  min="0" step="1" onChange={handleShortBreakTimeInputChange}/>
                             </div>
                             <div>
                                 <label>Long Break</label>
-                                <input className="input__number" type="number" defaultValue={10}  min="0" step="1"/>
+                                <input className="input__number" type="number" defaultValue={longBreakTime}  min="0" step="1" onChange={handleLongBreakTimeInputChange}/>
                             </div>
                         </div>
 
