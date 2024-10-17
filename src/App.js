@@ -53,16 +53,11 @@ export default function App() {
   };
 
   const handleAutoCheckTasks = () => {
-    console.log({tasks});
-    // if (isActiveToggle === true) { 
-      const updatedTasks = tasks.map((task) => {
-        return task.pomodoroCount === task.completedPomodoros
-          ? { ...task, isDone: true }
-          : task;
-      });
-      
-      setTasks(updatedTasks);
-    // }
+    setTasks(oldTasks => oldTasks.map((task) => {
+      return task.pomodoroCount === task.completedPomodoros 
+        ? { ...task, isDone: true }
+        : task;
+    }));
   };
 
   const [toggles, setToggles] = useState({
@@ -84,7 +79,7 @@ export default function App() {
           newToggles[toggleName].functionToCall();
         }
       
-        return newToggles; //muszę? 
+        return newToggles; //muszę? - muszę.
       }); 
   };
   //---------------------------------------------------
