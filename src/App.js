@@ -107,7 +107,7 @@ export default function App() {
     ) {
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
-          task.index === clickedLiElementIndex
+          task.id === clickedLiElementIndex
             ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
             : task
         )
@@ -122,7 +122,7 @@ export default function App() {
     if(currentMode === 'pomodoro') {
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
-          task.index === clickedLiElementIndex
+          task.id === clickedLiElementIndex
             ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
             : task
         )
