@@ -98,10 +98,8 @@ export default function App() {
         },
       };
 
-      if (newToggles[toggleName].isClicked === true) {
-        console.log(`${toggleName} clicked`);
-        newToggles[toggleName].functionToCall();
-      }
+      if (newToggles[toggleName].isClicked === true) {console.log(`${toggleName} clicked`);
+newToggles[toggleName].functionToCall();}
 
       return newToggles; //muszę? - muszę.
     });
@@ -143,7 +141,10 @@ export default function App() {
   const handleNextClick1 = () => {
     if (currentMode === "pomodoro") {
       setTasks((prevTasks) =>
-        prevTasks.map((task) => task.id === clickedLiElementIndex ? { ...task, completedPomodoros: task.completedPomodoros + 1 } : task,
+        prevTasks.map((task) =>
+          task.id === clickedLiElementIndex
+            ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
+            : task,
         ),
       );
 
