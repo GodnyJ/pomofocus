@@ -98,8 +98,10 @@ export default function App() {
         },
       };
 
-      if (newToggles[toggleName].isClicked === true) {console.log(`${toggleName} clicked`);
-newToggles[toggleName].functionToCall();}
+      if (newToggles[toggleName].isClicked === true) {
+        console.log(`${toggleName} clicked`);
+        newToggles[toggleName].functionToCall();
+}
 
       return newToggles; //muszę? - muszę.
     });

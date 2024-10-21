@@ -28,7 +28,7 @@ export default function TimerDisplay({
 
       return () => {
         clearInterval(intervalId);
-        handleNextClick1();
+        // handleNextClick1();
       };
     }
   }, [isTimerRunning]);
