@@ -14,19 +14,19 @@ body {
 
 .app-box1 {
   background-color: rgb(186, 73, 73);
-    min-height: 100vh;
-    width: 100%;
-    color: white;
-    transition: background-color 0.5s ease-in-out;
-    padding-bottom: 12px;
-    box-sizing: border-box;
-    padding-top: env(safe-area-inset-top);
+  min-height: 100vh;
+  width: 100%;
+  color: white;
+  transition: background-color 0.5s ease-in-out;
+  padding-bottom: 12px;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top);
 }
 
 .site-div {
   padding: 0px 12px;
-    max-width: 620px;
-    margin: auto;
+  max-width: 620px;
+  margin: auto;
 }
 
 .site {
@@ -35,7 +35,7 @@ body {
 
 .timer1 {
   max-width: 480px;
-    margin: auto;
+  margin: auto;
 }
 
 .timer0 {
@@ -62,25 +62,6 @@ body {
   box-sizing: border-box;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* .app {
   background-color: rgb(186, 73, 73);
   min-height: 100vh;
@@ -101,13 +82,13 @@ body {
 
 .line-under-navbar {
   height: 1px;
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   margin-bottom: 40px;
 }
 
 .timer-box {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .timer__buttons {
@@ -116,7 +97,7 @@ body {
 
 .timer__button--start-active {
   box-shadow: none !important;
-  transform: translateY(6px)
+  transform: translateY(6px);
 }
 
 .timer__button--next {

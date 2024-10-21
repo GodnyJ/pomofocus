@@ -10,16 +10,16 @@ export default function CountdownTimerTest() {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [milliseconds, setMilliseconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(null); //tutaj nie powinno być false? 
+  const [isRunning, setIsRunning] = useState(null); //tutaj nie powinno być false?
   // End of Time
 
-  // to dodałabym do funkcji handle zamiast stanu i kiedy timer zakończyłby działanie to bym wyswietliła 
+  // to dodałabym do funkcji handle zamiast stanu i kiedy timer zakończyłby działanie to bym wyswietliła
   const [showEndScreen, setShowEndScreen] = useState({
     show: false,
     message: "Happy coding in 2023",
   });
 
-  //wydaje mi się że dane wchodzące przeliczyłabym na sekundy i w use effect pracowała na asamych sekundach, następnie zmieniła znowu na minuty? ale może to zbyt dużo opearcji 
+  //wydaje mi się że dane wchodzące przeliczyłabym na sekundy i w use effect pracowała na asamych sekundach, następnie zmieniła znowu na minuty? ale może to zbyt dużo opearcji
   useEffect(() => {
     let interval;
     if (isRunning) {
@@ -42,13 +42,13 @@ export default function CountdownTimerTest() {
       }, 10);
     }
     //to wyrzuciłabym do drugiego useeffect - zasada unikania monolitycznego useeffect
-    if (hours === 0 && minutes === 0 && seconds === 0 && milliseconds === 1) { // milisekundy nie powinny być równe 1 ?
+    if (hours === 0 && minutes === 0 && seconds === 0 && milliseconds === 1) {
+      // milisekundy nie powinny być równe 1 ?
       setShowEndScreen({ ...showEndScreen, show: true });
       resetTimer();
     }
 
     return () => clearInterval(interval);
-
   }, [milliseconds, seconds, minutes, hours, isRunning, showEndScreen.show]);
 
   // Start Pause & Stop functions

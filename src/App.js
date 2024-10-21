@@ -10,16 +10,16 @@ import Settings from "./components/Navbar/Settings";
 import { isValidInputTimeValue } from "@testing-library/user-event/dist/utils";
 
 export default function App() {
-
   const [currentMode, setCurrentMode] = useState("pomodoro");
   const [config, setConfig] = useState({
-    pomodoro: {initialTime: 25, color: "rgb(186, 73, 73)"},
-    shortBreak: {initialTime: 5, color: "rgb(56, 133, 138)"},
-    longBreak: {initialTime: 10, color: "rgb(57, 112, 151)"},
+    pomodoro: { initialTime: 25, color: "rgb(186, 73, 73)" },
+    shortBreak: { initialTime: 5, color: "rgb(56, 133, 138)" },
+    longBreak: { initialTime: 10, color: "rgb(57, 112, 151)" },
   });
 
   // funkcja, która ustawia initialValue w config
-  const processSettingsData = (modeName,{ initialPomodoroTime }) => { //dlaczego tu przyjmujemy obiekt?, modename to nazwa trybu
+  const processSettingsData = (modeName, { initialPomodoroTime }) => {
+    //dlaczego tu przyjmujemy obiekt?, modename to nazwa trybu
     setConfig((oldConfig) => ({
       ...oldConfig,
       [modeName]: { ...oldConfig[modeName], initialTime: initialPomodoroTime },
@@ -27,7 +27,7 @@ export default function App() {
   };
 
   const mode = config[currentMode];
-//zrobić zamist current time, elapsedTime - czas który upłynął
+  //zrobić zamist current time, elapsedTime - czas który upłynął
 
   const [currentTime, setCurrentTime] = useState(mode.initialTime);
   // const [currentColor, setCurrentColor] = useState(mode.color);
@@ -36,7 +36,7 @@ export default function App() {
 
   useEffect(() => {
     setCurrentTime(mode.initialTime);
-  },[mode.initialTime])
+  }, [mode.initialTime]);
 
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
@@ -52,35 +52,59 @@ export default function App() {
     setIsTimerRunning(true);
   };
 
+  useEffect(() => {
+    console.log("Tasks updated: ", tasks);
+  }, [tasks]);
+
   const handleAutoCheckTasks = () => {
-    setTasks(oldTasks => oldTasks.map((task) => {
-      return task.pomodoroCount === task.completedPomodoros 
-        ? { ...task, isDone: true }
-        : task;
-    }));
+    setTasks((oldTasks) => {
+      console.log("Before update:", oldTasks); // jakie są stare zadania
+
+      // nowa tablica zamiast aktualizować w miejscu dla pewności
+      const updatedTasks = oldTasks.map((task) => {
+        const pomodoroCount = Number(task.pomodoroCount);
+        const completedPomodoros = Number(task.completedPomodoros);
+        return completedPomodoros >= pomodoroCount
+          ? { ...task, isDone: true }
+          : task;
+      });
+
+      console.log("After update:", updatedTasks); //czy zadania się zmieniają
+
+      return [...updatedTasks]; // tworze tablice aby React wymusił ponowne renderowanie - ale to nic nie dało
+    });
   };
 
   const [toggles, setToggles] = useState({
-    autoStartBreaks: {name: "Auto Start Breaks", isClicked: false, functionToCall: handleAutoStartBreaks},
-    autoCheckTasks: {name: "Auto Check Tasks", isClicked: false, functionToCall: handleAutoCheckTasks}
-  })  
+    autoStartBreaks: {
+      name: "Auto Start Breaks",
+      isClicked: false,
+      functionToCall: handleAutoStartBreaks,
+    },
+    autoCheckTasks: {
+      name: "Auto Check Tasks",
+      isClicked: false,
+      functionToCall: handleAutoCheckTasks,
+    },
+  });
 
   const handleToggleClick = (toggleName) => {
     setToggles((prevToggles) => {
-        const newToggles = {
-          ...prevToggles,
-          [toggleName]: {
-            ...prevToggles[toggleName],
-            isClicked: !prevToggles[toggleName].isClicked,
-          },
-        };
-      
-        if (newToggles[toggleName].isClicked === true ) {
-          newToggles[toggleName].functionToCall();
-        }
-      
-        return newToggles; //muszę? - muszę.
-      }); 
+      const newToggles = {
+        ...prevToggles,
+        [toggleName]: {
+          ...prevToggles[toggleName],
+          isClicked: !prevToggles[toggleName].isClicked,
+        },
+      };
+
+      if (newToggles[toggleName].isClicked === true) {
+        console.log(`${toggleName} clicked`);
+        newToggles[toggleName].functionToCall();
+      }
+
+      return newToggles; //muszę? - muszę.
+    });
   };
   //---------------------------------------------------
 
@@ -89,11 +113,11 @@ export default function App() {
 
     setCurrentTime(selectedMode.initialTime);
     // setCurrentColor(selectedMode.color);
-    setCurrentMode(modeName)
-    console.log(currentMode)
-    console.log(currentColor)
-    console.log(selectedMode.color)
-  }
+    setCurrentMode(modeName);
+    console.log(currentMode);
+    console.log(currentColor);
+    console.log(selectedMode.color);
+  };
 
   const handleStartClick = () => {
     if (currentTime !== 0) {
@@ -109,37 +133,36 @@ export default function App() {
         prevTasks.map((task) =>
           task.id === clickedLiElementIndex
             ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
-            : task
-        )
+            : task,
+        ),
       );
     }
   };
 
-
-
-  //aktualnie w użyciu 
+  //aktualnie w użyciu
   const handleNextClick1 = () => {
-    if(currentMode === 'pomodoro') {
+    if (currentMode === "pomodoro") {
       setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === clickedLiElementIndex
-            ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
-            : task
-        )
+        prevTasks.map((task) => task.id === clickedLiElementIndex ? { ...task, completedPomodoros: task.completedPomodoros + 1 } : task,
+        ),
       );
 
-//switch
-      handleTimerChange1('shortBreak');
+      // Sprawdzam, czy opcja "Auto Check Tasks" jest włączona
+      if (toggles.autoCheckTasks.isClicked) {
+        handleAutoCheckTasks();
+      } // Wywołanie funkcji tylko wtedy, gdy toggle jest na "true"
+
+      //switch
+      handleTimerChange1("shortBreak");
       // setCurrentMode("shortBreak")
-    } else if (currentMode === 'shortBreak') {
-      handleTimerChange1('pomodoro');
+    } else if (currentMode === "shortBreak") {
+      handleTimerChange1("pomodoro");
       // setCurrentMode("pomodoro")
-    } else if (currentMode === 'longBreak') {
-      handleTimerChange1('pomodoro');
+    } else if (currentMode === "longBreak") {
+      handleTimerChange1("pomodoro");
       // setCurrentMode("pomodoro")
     }
-  
-  } 
+  };
 
   const handleSettingsClick = () => {
     setIsSettingsDialogOpen(!isSettingsDialogOpen);
@@ -187,6 +210,7 @@ export default function App() {
                       key={currentTime}
                       timeInMinutes={currentTime}
                       isTimerRunning={isTimerRunning}
+                      handleNextClick1={handleNextClick1}
                     />
 
                     <div className="timer__buttons">
