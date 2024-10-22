@@ -1,12 +1,37 @@
+// import React from 'react';
+// import "./timerDisplay.css";
+// import { useCountdown } from '../../hooks/useCountDown';
+
+// export default function TimerDisplay({ initialTimeInMinutes, isTimerRunning }) {
+//   const [minutes, seconds] = useCountdown(initialTimeInMinutes, isTimerRunning);
+
+//   const formatTime = (minutes, seconds) => {
+//     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+//   };
+
+//   return (
+//     <span className="timer-display">{formatTime(minutes, seconds)}</span>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
 import React, { useEffect, useState } from "react";
 import "./timerDisplay.css";
 
 export default function TimerDisplay({
-  timeInMinutes,
+  initialTimeInMinutes,
   isTimerRunning,
   handleNextClick1,
 }) {
-  const [timeLeft, setTimeLeft] = useState(timeInMinutes * 60);
+  const [timeLeft, setTimeLeft] = useState(initialTimeInMinutes * 60);
 
   // funkcja formatująca czas
   const formatTime = (t) => {
@@ -37,4 +62,4 @@ export default function TimerDisplay({
 }
 
 //bląd któy napotkałam to to że do timeleft przypisałam wartość {time} czyli obiekt z propsów
-//a powinnam przypisac samo time bo prevTime wymagał liczy a ja podałąm obiekt
+//a powinnam przypisac samo time bo prevTime wymagał liczy a ja podałam obiekt

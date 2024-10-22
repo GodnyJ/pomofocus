@@ -211,7 +211,7 @@ export default function App() {
                     {/* Licznik */}
                     <TimerDisplay
                       key={currentTime}
-                      timeInMinutes={currentTime}
+                      initialTimeInMinutes={currentTime}
                       isTimerRunning={isTimerRunning}
                       handleNextClick1={handleNextClick1}
                     />
