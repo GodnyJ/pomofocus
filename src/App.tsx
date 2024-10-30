@@ -9,17 +9,24 @@ import "./components/Timer/timer.css";
 import Settings from "./components/Navbar/Settings";
 import { isValidInputTimeValue } from "@testing-library/user-event/dist/utils";
 
+const initialConfig = {
+  pomodoro: { initialTime: 25, color: "rgb(186, 73, 73)" },
+  shortBreak: { initialTime: 5, color: "rgb(56, 133, 138)" },
+  longBreak: { initialTime: 10, color: "rgb(57, 112, 151)" },
+};
+
+type ModeName = keyof typeof initialConfig;
+
 export default function App() {
-  const [currentMode, setCurrentMode] = useState("pomodoro");
-  const [config, setConfig] = useState({
-    pomodoro: { initialTime: 25, color: "rgb(186, 73, 73)" },
-    shortBreak: { initialTime: 5, color: "rgb(56, 133, 138)" },
-    longBreak: { initialTime: 10, color: "rgb(57, 112, 151)" },
-  });
+  const [currentMode, setCurrentMode] = useState<ModeName>("pomodoro");
+  const [config, setConfig] = useState(initialConfig);
 
   // funkcja, która ustawia initialValue w config
-  const processSettingsData = (modeName, { initialPomodoroTime }) => {
-    //dlaczego tu przyjmujemy obiekt?, modename to nazwa trybu
+  const processSettingsData = (
+    modeName: ModeName,
+    { initialPomodoroTime }: { initialPomodoroTime: number }
+  ) => {
+    //dlaczego tu przyjmujemy obiekt?, modename to nazwa trybu - nie muszę
     setConfig((oldConfig) => ({
       ...oldConfig,
       [modeName]: { ...oldConfig[modeName], initialTime: initialPomodoroTime },
@@ -75,16 +82,19 @@ export default function App() {
     });
   };
 
+  const autoConfig = {
+    autoStartBreaks: handleAutoStartBreaks,
+    autoCheckTasks: handleAutoCheckTasks,
+  };
+
   const [toggles, setToggles] = useState({
     autoStartBreaks: {
       name: "Auto Start Breaks",
       isClicked: false,
-      functionToCall: handleAutoStartBreaks,
     },
     autoCheckTasks: {
       name: "Auto Check Tasks",
       isClicked: false,
-      functionToCall: handleAutoCheckTasks,
     },
   });
 
@@ -100,8 +110,9 @@ export default function App() {
 
       if (newToggles[toggleName].isClicked === true) {
         console.log(`${toggleName} clicked`);
-        newToggles[toggleName].functionToCall();
-}
+        autoConfig[toggleName]();
+        // newToggles[toggleName].functionToCall();
+      }
 
       return newToggles; //muszę? - muszę.
     });
@@ -133,8 +144,8 @@ export default function App() {
         prevTasks.map((task) =>
           task.id === clickedLiElementIndex
             ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
-            : task,
-        ),
+            : task
+        )
       );
     }
   };
@@ -146,8 +157,8 @@ export default function App() {
         prevTasks.map((task) =>
           task.id === clickedLiElementIndex
             ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
-            : task,
-        ),
+            : task
+        )
       );
 
       // Sprawdzam, czy opcja "Auto Check Tasks" jest włączona

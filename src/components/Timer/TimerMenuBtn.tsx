@@ -1,8 +1,12 @@
-import React from "react";
 import "./timerMenuBtn.css";
 
-export default function TimerMenuBtn({ text, modeName, handleTimerChange }) {
-  // console.log(`Button: ${text}, Time: ${time}, Color: ${bgc}`);
+interface TimerMenuBtnProps {
+  text: string;
+  modeName: string;
+  handleTimerChange: (modeName: string) => void;
+}
+
+export default function TimerMenuBtn({ text, modeName, handleTimerChange }: TimerMenuBtnProps) {
   return (
     <button
       className="timer-menu-btn"

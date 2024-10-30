@@ -2,7 +2,11 @@ import React from "react";
 import "./navbar.css";
 import NavButton from "./NavButton";
 
-export default function Navbar({ handleSettingsClick }) {
+interface NavBarProps {
+  handleSettingsClick: () => void;
+}
+
+export default function Navbar({ handleSettingsClick }: NavBarProps) {
   return (
     <nav className="navbar">
       <h1 className="navbar__logo">

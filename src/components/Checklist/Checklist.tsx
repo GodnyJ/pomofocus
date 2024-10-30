@@ -2,16 +2,32 @@ import React, { useState } from "react";
 import "./checklist.css";
 import AddEditTaskForm from "./AddEditTaskForm";
 
+interface Task {
+  id: number;
+  text: string;
+  pomodoroCount: number;
+  completedPomodoros: number;
+  isDone: boolean;
+}
+
+type ChecklistProps = {
+  tasks: Task[];
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>; // ??????????? w wielu miejscach przyjmuje różne argumenty lin 46, 73
+  backgroundColor: string;
+  clickedLiElementIndex: number;
+  setClickedLiElementIndex: React.Dispatch<React.SetStateAction<number>>;
+}
+
 export default function Checklist({
   tasks,
   setTasks,
   backgroundColor,
   clickedLiElementIndex,
   setClickedLiElementIndex,
-}) {
-  const [newTask, setNewTask] = useState("");
+}: ChecklistProps) {
+  const [newTask, setNewTask] = useState<string>("");
   const [isAddingTask, setIsAddingTask] = useState(false); // czy tutaj potrzebuje stanu?
-  const [pomodoroCount, setPomodoroCount] = useState(1);
+  const [pomodoroCount, setPomodoroCount] = useState<number>(1);
 
   function addTask() {
     if (newTask.trim() === "") {
@@ -32,13 +48,13 @@ export default function Checklist({
     setIsAddingTask(false);
   }
 
-  const handleTaskInputChange = (e) => {
-    setNewTask(e.target.value);
+  const handleTaskInputChange = (taskTitle: string) => {
+    setNewTask(taskTitle);
   };
 
   // Funkcja pobierająca liczbę z inputu pomodoro i ustawiająca stan pomodoro dla danego zadania
-  const handlePomodoroInput = (e) => {
-    setPomodoroCount(e.target.value);
+  const handlePomodoroInput = (valuePom: number) => {    
+    setPomodoroCount(valuePom);
   };
 
   const showTaskForm = () => {
@@ -53,7 +69,7 @@ export default function Checklist({
   // }
 
   //zmeniona na 22.10.24 - naprawione
-  const handleChangeIsDoneValue = (taskId) => {
+  const handleChangeIsDoneValue = (taskId: number) => {
     setTasks((oldTasks) =>
       oldTasks.map((task) =>
         taskId === task.id ? { ...task, isDone: !task.isDone } : task,
@@ -69,7 +85,7 @@ export default function Checklist({
     setPomodoroCount((prevCount) => Math.max(prevCount - 1, 1));
   };
 
-  const whichLiElementIsClicked = (taskId) => {
+  const whichLiElementIsClicked = (taskId: number) => {
     setClickedLiElementIndex(taskId);
     console.log(clickedLiElementIndex);
     console.log(tasks);
@@ -93,7 +109,7 @@ export default function Checklist({
       <div>
         <ul className="checklist__ul-tasks-box">
           {tasks
-            .sort((a, b) => a.isDone - b.isDone)
+            .sort((a, b) => Number(a.isDone) - Number(b.isDone))
             .map((task) => (
               <li
                 key={task.id}

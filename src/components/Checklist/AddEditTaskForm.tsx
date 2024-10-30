@@ -1,5 +1,17 @@
-import React from "react";
+import React, { ChangeEventHandler } from "react";
 import "./addEditTaskForm.css";
+
+type VoidFunction = () => void;
+
+interface AddEditTaskFormProps {
+  addTask: VoidFunction;
+  handleTaskInputChange: (value: string) => void;
+  newTask: string;
+  pomodoroCount: number;
+  increasePomodoroCount: VoidFunction;
+  decreasePomodoroCount: VoidFunction;
+  handlePomodoroInput: (value: number) => void;
+}
 
 export default function AddEditTaskForm({
   addTask,
@@ -9,7 +21,7 @@ export default function AddEditTaskForm({
   increasePomodoroCount,
   decreasePomodoroCount,
   handlePomodoroInput,
-}) {
+}: AddEditTaskFormProps) {
   return (
     <div className="form-box">
       <div className="form__up-site">
@@ -18,7 +30,7 @@ export default function AddEditTaskForm({
           className="form-input__task-name"
           type="text"
           placeholder="What are you working on?"
-          onChange={handleTaskInputChange}
+          onChange={(e) => handleTaskInputChange(e.target.value)}
           value={newTask}
         />
 
@@ -30,7 +42,7 @@ export default function AddEditTaskForm({
             type="number"
             min="0"
             step="1"
-            onChange={handlePomodoroInput}
+            onChange={(e) => handlePomodoroInput(Number(e.target.value))}
             value={pomodoroCount}
             readOnly
           />

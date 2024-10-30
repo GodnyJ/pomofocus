@@ -26,15 +26,20 @@
 import React, { useEffect, useState } from "react";
 import "./timerDisplay.css";
 
+interface TimerDispleyProps {
+  initialTimeInMinutes: number;
+  isTimerRunning: boolean;
+}
+
 export default function TimerDisplay({
   initialTimeInMinutes,
   isTimerRunning,
-  handleNextClick1,
-}) {
+  // handleNextClick1,
+}: TimerDispleyProps) {
   const [timeLeft, setTimeLeft] = useState(initialTimeInMinutes * 60);
 
   // funkcja formatująca czas
-  const formatTime = (t) => {
+  const formatTime = (t: number): string => {
     const minutes = Math.floor(t / 60); // Obliczamy minuty
     const seconds = t % 60; // Obliczamy pozostałe sekundy
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;

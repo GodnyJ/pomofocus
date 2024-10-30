@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import "./dropdownSelect.css";
 
-export default function DropdownSelect({ options }) {
+interface DropdownSelectProps{
+  options: string[];
+}
+
+export default function DropdownSelect({ options }: DropdownSelectProps) {
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
-  const handleSelectChange = (e) => {
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(e.target.value);
   };
 
