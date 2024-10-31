@@ -2,6 +2,8 @@ import React from "react";
 import "./settings.css";
 import DropdownSelect from "./DropdownSelect";
 import { useState } from "react";
+import { useAtom } from "jotai";
+import { toggleSettingsAtom } from "../../atoms";
 
 function ToggleButton({ isActiveToggle, functionToCall }) {
   //nowe--------------------------------------
@@ -69,6 +71,9 @@ export default function Settings({
   // isActiveToggle,
   // setIsActiveToggle
 }) {
+  //na 05.11
+  const [, toggleSettings] = useAtom(toggleSettingsAtom);
+
   //na 15.10
   const [pomodoroTime, setPomodoroTime] = useState(25);
   const [shortBreakTime, setShortBreakTime] = useState(5);
@@ -88,7 +93,7 @@ export default function Settings({
     onDataReady("pomodoro", { initialPomodoroTime: pomodoroTime });
     onDataReady("shortBreak", { initialPomodoroTime: shortBreakTime });
     onDataReady("longBreak", { initialPomodoroTime: longBreakTime });
-    handleSettingsClick();
+    toggleSettings();
     // console.log(pomodoroTime)
   };
   //tu koniec
@@ -101,7 +106,7 @@ export default function Settings({
             <h2>Settings</h2>
             <img
               src="/icons/remove-black-sm.png"
-              onClick={handleSettingsClick}
+              onClick={toggleSettings}
               alt="exit icon"
             />
           </div>

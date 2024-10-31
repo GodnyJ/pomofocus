@@ -1,12 +1,17 @@
 import React from "react";
 import "./navbar.css";
 import NavButton from "./NavButton";
+import { useAtom } from "jotai";
+import { isSettingsOpenAtom } from "../../atoms";
+import { toggleSettingsAtom } from "../../atoms";
 
-interface NavBarProps {
-  handleSettingsClick: () => void;
-}
+// interface NavBarProps {
+//   handleSettingsClick: () => void;
+// }
 
-export default function Navbar({ handleSettingsClick }: NavBarProps) {
+export default function Navbar() {
+  const [, toggleSettings] = useAtom(toggleSettingsAtom);
+
   return (
     <nav className="navbar">
       <h1 className="navbar__logo">
@@ -19,23 +24,23 @@ export default function Navbar({ handleSettingsClick }: NavBarProps) {
         <NavButton
           iconSrc={"icons/graph-white.png"}
           label={"Report"}
-          handleClick={handleSettingsClick}
+          handleClick={toggleSettings}
         />
         <NavButton
           iconSrc={"icons/config-white.png"}
           label={"Setting"}
-          handleClick={handleSettingsClick}
+          handleClick={toggleSettings}
         />
         <NavButton
           iconSrc={"icons/user-white.png"}
           label="Sign In"
-          handleClick={handleSettingsClick}
+          handleClick={toggleSettings}
         />
         <NavButton
           iconSrc={"icons/threedots-white.png"}
           label=""
           className="navbar__menu--lastbtn"
-          handleClick={handleSettingsClick}
+          handleClick={toggleSettings}
         />
       </div>
     </nav>

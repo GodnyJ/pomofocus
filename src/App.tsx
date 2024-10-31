@@ -9,6 +9,9 @@ import "./components/Timer/timer.css";
 import Settings from "./components/Navbar/Settings";
 import { isValidInputTimeValue } from "@testing-library/user-event/dist/utils";
 
+import { useAtom } from "jotai";
+import { isSettingsOpenAtom } from "./atoms";
+
 const initialConfig = {
   pomodoro: { initialTime: 25, color: "rgb(186, 73, 73)" },
   shortBreak: { initialTime: 5, color: "rgb(56, 133, 138)" },
@@ -18,6 +21,8 @@ const initialConfig = {
 type ModeName = keyof typeof initialConfig;
 
 export default function App() {
+  const [isSettingsOpen] = useAtom(isSettingsOpenAtom);
+
   const [currentMode, setCurrentMode] = useState<ModeName>("pomodoro");
   const [config, setConfig] = useState(initialConfig);
 
@@ -188,7 +193,7 @@ export default function App() {
         <div className="app-box1" style={{ backgroundColor: currentColor }}>
           <div className="app-box2">
             <div className="navbar-div">
-              <Navbar handleSettingsClick={handleSettingsClick} />
+              <Navbar /> 
             </div>
             <div className="site-div">
               <div className="site">
@@ -264,7 +269,7 @@ export default function App() {
               </div>
             </div>
           </div>
-          {isSettingsDialogOpen && (
+          {isSettingsOpen && (
             <Settings
               onDataReady={processSettingsData}
               handleSettingsClick={handleSettingsClick}
