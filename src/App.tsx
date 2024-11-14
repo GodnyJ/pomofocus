@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Checklist from "./components/Checklist/Checklist";
 import Navbar from "./components/Navbar/Navbar";
-// import Timer from "./components/Timer/Timer";
 import TimerDisplay from "./components/Timer/TimerDisplay";
 import TimerMenuBtn from "./components/Timer/TimerMenuBtn";
 import "./App.css";
@@ -22,20 +21,6 @@ const initialConfig = {
 type ModeName = keyof typeof initialConfig;
 
 export default function App() {
-  function wrapInArray<T>(value: T): T[] {
-    return [value];
-  }
-
-  function wrap<A, B>(value: A, value2: B): [A, B] {
-    return [value, value2];
-  }
-
-  const numarr = wrapInArray(123);
-  const strarr = wrap("hanna", 123);
-
-  console.log(numarr);
-  console.log(strarr);
-
   const [isSettingsOpen] = useAtom(isSettingsOpenAtom); //tylko odczytuję wartość więc czy powinnam zmienić z useAtom na useAtomValue? jak to się ma do renderów?
 
   const [currentMode, setCurrentMode] = useState<ModeName>("pomodoro");
@@ -204,7 +189,8 @@ export default function App() {
 
   return (
     <main>
-      <SignupPage />
+      <SignupPage title="Create Account" />
+      <SignupPage title="Login" />
       <div id="target">
         <div className="app-box1" style={{ backgroundColor: currentColor }}>
           <div className="app-box2">
