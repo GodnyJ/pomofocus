@@ -1,8 +1,7 @@
 import React from "react";
 import "./navbar.css";
 import NavButton from "./NavButton";
-import { useAtom } from "jotai";
-import { isSettingsOpenAtom } from "../../atoms";
+import { useAtom, useSetAtom } from "jotai";
 import { toggleSettingsAtom } from "../../atoms";
 
 // interface NavBarProps {
@@ -10,7 +9,8 @@ import { toggleSettingsAtom } from "../../atoms";
 // }
 
 export default function Navbar() {
-  const [, toggleSettings] = useAtom(toggleSettingsAtom);
+  // const [,toggleSettings] = useAtom(toggleSettingsAtom); zamiast tego to niżej???
+  const toggleSettings = useSetAtom(toggleSettingsAtom);
 
   return (
     <nav className="navbar">

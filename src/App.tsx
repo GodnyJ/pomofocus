@@ -11,6 +11,7 @@ import { isValidInputTimeValue } from "@testing-library/user-event/dist/utils";
 
 import { useAtom } from "jotai";
 import { isSettingsOpenAtom } from "./atoms";
+import SignupPage from "./components/Authentication/SignupPage";
 
 const initialConfig = {
   pomodoro: { initialTime: 25, color: "rgb(186, 73, 73)" },
@@ -21,7 +22,21 @@ const initialConfig = {
 type ModeName = keyof typeof initialConfig;
 
 export default function App() {
-  const [isSettingsOpen] = useAtom(isSettingsOpenAtom);
+  function wrapInArray<T>(value: T): T[] {
+    return [value];
+  }
+
+  function wrap<A, B>(value: A, value2: B): [A, B] {
+    return [value, value2];
+  }
+
+  const numarr = wrapInArray(123);
+  const strarr = wrap("hanna", 123);
+
+  console.log(numarr);
+  console.log(strarr);
+
+  const [isSettingsOpen] = useAtom(isSettingsOpenAtom); //tylko odczytuję wartość więc czy powinnam zmienić z useAtom na useAtomValue? jak to się ma do renderów?
 
   const [currentMode, setCurrentMode] = useState<ModeName>("pomodoro");
   const [config, setConfig] = useState(initialConfig);
@@ -189,11 +204,12 @@ export default function App() {
 
   return (
     <main>
+      <SignupPage />
       <div id="target">
         <div className="app-box1" style={{ backgroundColor: currentColor }}>
           <div className="app-box2">
             <div className="navbar-div">
-              <Navbar /> 
+              <Navbar />
             </div>
             <div className="site-div">
               <div className="site">

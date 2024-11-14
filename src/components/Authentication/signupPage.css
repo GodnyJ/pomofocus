@@ -1,0 +1,135 @@
+html {
+  display: block;
+}
+
+body {
+  margin: 0;
+  font-weight: 300;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.signup-box {
+  background-color: rgb(186, 73, 73);
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  padding: 30px 0px;
+}
+
+.logo {
+  width: 280px;
+}
+
+.signup-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  opacity: 0.8;
+  letter-spacing: 0.05em;
+  margin-top: 18px;
+  margin-bottom: 38px;
+}
+
+.form {
+  width: 350px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: rgb(196, 196, 196) 0px 1px 0px;
+  padding: 8px 18px 32px;
+  box-sizing: border-box;
+}
+
+.signup-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 18px;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 2px;
+  opacity: 0.9;
+  font-size: 14px;
+  padding: 12px;
+  min-width: 70px;
+  background-color: white;
+  color: rgb(119, 119, 119);
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  width: 100%;
+  border: 1px solid rgb(220, 220, 220);
+}
+
+.google-logo {
+  width: 18px;
+  margin-right: 8px;
+}
+
+.box-or {
+  display: flex;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  align-items: center;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+.line {
+  width: 42%;
+  height: 1px;
+  background-color: rgb(235, 235, 235);
+}
+
+.or-text {
+  color: rgb(196, 196, 196);
+}
+
+label {
+  color: rgb(196, 196, 196);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+input {
+  border-radius: 4px;
+  background-color: rgb(239, 239, 239);
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  padding: 12px 10px;
+  box-shadow: none;
+  border: none;
+  color: rgb(85, 85, 85);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.accept-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 2px;
+  color: white;
+  opacity: 0.9;
+  font-size: 14px;
+  padding: 12px;
+  min-width: 70px;
+  background-color: rgb(34, 34, 34);
+  border: 2px solid rgb(34, 34, 34);
+  width: 100%;
+}

@@ -16,7 +16,7 @@ type ChecklistProps = {
   backgroundColor: string;
   clickedLiElementIndex: number;
   setClickedLiElementIndex: React.Dispatch<React.SetStateAction<number>>;
-}
+};
 
 export default function Checklist({
   tasks,
@@ -53,7 +53,7 @@ export default function Checklist({
   };
 
   // Funkcja pobierająca liczbę z inputu pomodoro i ustawiająca stan pomodoro dla danego zadania
-  const handlePomodoroInput = (valuePom: number) => {    
+  const handlePomodoroInput = (valuePom: number) => {
     setPomodoroCount(valuePom);
   };
 
@@ -72,8 +72,8 @@ export default function Checklist({
   const handleChangeIsDoneValue = (taskId: number) => {
     setTasks((oldTasks) =>
       oldTasks.map((task) =>
-        taskId === task.id ? { ...task, isDone: !task.isDone } : task,
-      ),
+        taskId === task.id ? { ...task, isDone: !task.isDone } : task
+      )
     );
   };
 
@@ -95,7 +95,7 @@ export default function Checklist({
     <div className="checklist-section">
       <p className="checklist__current-task">
         {tasks.map((task) =>
-          clickedLiElementIndex === task.id ? task.text : "",
+          clickedLiElementIndex === task.id ? task.text : ""
         )}
       </p>
       <div className="checklist__title-box">

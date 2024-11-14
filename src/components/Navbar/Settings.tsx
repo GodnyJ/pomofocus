@@ -57,6 +57,15 @@ function ToggleButton({ isActiveToggle, functionToCall }) {
   );
 }
 
+interface SettingsProp {
+  onDataReady: (
+    modeName: string,
+    data: { initialPomodoroTime: number }
+  ) => void;
+  toggles: boolean;
+  handleToggleClick: (arg: string) => void;
+}
+
 export default function Settings({
   onDataReady,
 
@@ -65,12 +74,12 @@ export default function Settings({
   // handleAutoCheckTasks,
   handleToggleClick,
 
-  handleSettingsClick,
+  // handleSettingsClick,
   // setPomodoroTime,
   // pomodoroTime,
   // isActiveToggle,
   // setIsActiveToggle
-}) {
+}: SettingsProp) {
   //na 05.11
   const [, toggleSettings] = useAtom(toggleSettingsAtom);
 
