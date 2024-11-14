@@ -1,3 +1,4 @@
+import { auth, googleProvider } from "../../../src/firebaseConfig";
 import "./signupPage.css";
 
 export default function SignupPage() {
