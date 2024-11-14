@@ -1,46 +1,58 @@
 import { useState } from "react";
 import { auth, googleProvider } from "../../../src/firebaseConfig";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import "./signupPage.css";
 
-interface signupPageProps {
-  title: string;
-}
-
-export default function SignupPage({ title }: signupPageProps) {
+export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLogin, setIsLogin] = useState(false); // true dla logowania, false dla rejestracji
 
-  const handleGoogleSignup = async () => {
+  //obsłuży zarówno logowanie, jak i rejestrację przez Google. Firebase automatycznie rozpoznaje, czy użytkownik już istnieje
+  const handleGoogleAuth = async () => {
     try {
       await signInWithPopup(auth, googleProvider); //auth - instancja autoryzacji firebase
-      alert("Zarejestrowano pomyślnie przez Google!");
+      alert(
+        isLogin
+          ? "Zalogowano pomyślnie przez Google!"
+          : "Zarejestrowano pomyślnie przez Google!"
+      );
     } catch (error) {
-      console.log("błąd przy logowaniu przez google", error);
+      console.log("błąd przy autoryzacji przez google", error);
     }
   };
 
-  const handleEmailSignup = async () => {
+  const handleEmailAuth = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      if (isLogin) {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Zalogowano przez e-mail!");
+      } else if (isLogin === false)
+        await createUserWithEmailAndPassword(auth, email, password);
       alert("Zarejestrowano przez e-mail!");
     } catch (error) {
-      console.log("błąd w logowaniu przez email", error);
+      console.log("błąd przy autoryzacji przez email", error);
     }
   };
 
   return (
     <div className="signup-box">
       <img className="logo" src="images/logo192.png" alt="logo" />
-      <span className="signup-title">{title}</span>
+      <span className="signup-title">
+        {isLogin ? "Login" : "Create Account"}
+      </span>
       <div className="form">
-        <button className="signup-google-btn" onClick={handleGoogleSignup}>
+        <button className="signup-google-btn" onClick={handleGoogleAuth}>
           <img
             className="google-logo"
             src="icons/g-logo.png"
             alt="google-icon"
           />
-          Signup with Google
+          {isLogin ? "Login with Google" : "Signup with Google"}
         </button>
         <div className="box-or">
           <div className="line"></div>
@@ -59,8 +71,16 @@ export default function SignupPage({ title }: signupPageProps) {
           placeholder="•••••••••••"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button className="accept-btn" onClick={handleEmailSignup}>
-          Sign up with Email
+        <button className="accept-btn" onClick={handleEmailAuth}>
+          {isLogin ? "Log in with Email" : "Sign up with Email"}
+        </button>
+      </div>
+      <div className="change-panel">
+        <div>
+          {isLogin ? "Do not have an account?" : "Already have an account?"}
+        </div>
+        <button onClick={() => setIsLogin(!isLogin)}>
+          {isLogin ? "Create Account" : "Log in"}
         </button>
       </div>
     </div>

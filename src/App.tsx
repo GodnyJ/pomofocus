@@ -189,8 +189,7 @@ export default function App() {
 
   return (
     <main>
-      <SignupPage title="Create Account" />
-      <SignupPage title="Login" />
+      <SignupPage />
       <div id="target">
         <div className="app-box1" style={{ backgroundColor: currentColor }}>
           <div className="app-box2">
