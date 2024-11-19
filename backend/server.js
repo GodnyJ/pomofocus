@@ -5,13 +5,13 @@ const router = jsonServer.router("db.json");
 const middlewares = jsonServer.defaults();
 
 // Reguły autoryzacji
-const rules = auth.rewriter({
-  // Tylko zalogowani użytkownicy mogą przeglądać zasoby
-  users: 600
-});
+// const rules = auth.rewriter({
+//   // Tylko zalogowani użytkownicy mogą przeglądać zasoby
+//   users: 600
+// });
 
 server.use(middlewares);
-server.use(rules);
+// server.use(rules);
 server.use(auth);
 server.use(router);
 
