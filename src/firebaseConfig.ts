@@ -2,12 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyDkADtEcqPCZg948nV7i73W3-svA1B4Deo",
+  authDomain: "pomofocus-613e4.firebaseapp.com",
+  projectId: "pomofocus-613e4",
+  storageBucket: "pomofocus-613e4.firebasestorage.app",
+  messagingSenderId: "212901313702",
+  appId: "1:212901313702:web:9d1d58cd07f29f2eda0867",
+  measurementId: "G-19PZLBPJQB",
 };
 
 const app = initializeApp(firebaseConfig);
