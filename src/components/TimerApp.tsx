@@ -12,6 +12,7 @@ import { isValidInputTimeValue } from "@testing-library/user-event/dist/utils";
 import { useAtom } from "jotai";
 import { isSettingsOpenAtom } from "../atoms";
 import SignupPage from "./Authentication/SignupPage";
+import { json } from "react-router-dom";
 
 const initialConfig = {
   pomodoro: { initialTime: 25, color: "rgb(186, 73, 73)" },
@@ -53,8 +54,11 @@ export default function TimerApp() {
 
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
-  const [tasks, setTasks] = useState([]);
   const [clickedLiElementIndex, setClickedLiElementIndex] = useState(0);
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem("tasks");
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
 
   //Settings.js
   // const [pomodoroTime, setPomodoroTime] = useState(25);
@@ -66,8 +70,12 @@ export default function TimerApp() {
   };
 
   useEffect(() => {
-    console.log("Tasks updated: ", tasks);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
+
+  // useEffect(() => {
+  //   console.log("Tasks updated: ", tasks);
+  // }, [tasks]);
 
   const handleAutoCheckTasks = () => {
     setTasks((oldTasks) => {
