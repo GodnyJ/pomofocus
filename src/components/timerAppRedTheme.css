@@ -1,0 +1,39 @@
+.app-box1 {
+  background-color: rgb(186, 73, 73);
+}
+
+.timer0 {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+.timer-menu-btn {
+  font-size: 16px;
+  background: none;
+  color: white;
+  border: none;
+}
+
+.timer-display {
+  display: inline-block;
+  width: 100%;
+  font-size: 120px;
+  font-weight: bold;
+}
+
+.timer__button--start {
+  margin: 20px 0px 0px;
+  padding: 0px 12px;
+  border-radius: 4px;
+  box-shadow: rgb(235, 235, 235) 0px 6px 0px;
+  font-size: 22px;
+  font-weight: bold;
+  text-transform: uppercase;
+  width: 200px;
+  height: 55px;
+  background-color: white;
+  color: rgb(186, 73, 73);
+  border: none;
+  cursor: pointer;
+  transition: color 0.5s ease-in-out;
+}

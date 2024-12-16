@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import { isSettingsOpenAtom, tasksAtom } from "../atoms";
 import Checklist from "./Checklist/Checklist";
 import Navbar from "./Navbar/Navbar";
 import TimerDisplay from "./Timer/TimerDisplay";
 import TimerMenuBtn from "./Timer/TimerMenuBtn";
-// import "./App.css";
+import Settings from "./Navbar/Settings";
+import ChatWindow from "./ChatWindow";
 import "./timerApp.css";
 import "./Timer/timer.css";
-import Settings from "./Navbar/Settings";
-import { isValidInputTimeValue } from "@testing-library/user-event/dist/utils";
-
-import { useAtom } from "jotai";
-import { isSettingsOpenAtom } from "../atoms";
-import SignupPage from "./Authentication/SignupPage";
-import { json } from "react-router-dom";
 
 const initialConfig = {
   pomodoro: { initialTime: 25, color: "rgb(186, 73, 73)" },
@@ -26,57 +22,45 @@ export default function TimerApp() {
   const [isSettingsOpen] = useAtom(isSettingsOpenAtom); //tylko odczytuję wartość więc czy powinnam zmienić z useAtom na useAtomValue? jak to się ma do renderów?
 
   const [currentMode, setCurrentMode] = useState<ModeName>("pomodoro");
+  const [currentTheme, setCurrentTheme] = useState("white"); //lub white
   const [config, setConfig] = useState(initialConfig);
+  const mode = config[currentMode];
+  const [currentTime, setCurrentTime] = useState(mode.initialTime); //zrobić zamist current time, elapsedTime - czas który upłynął
+  const currentColor = mode.color;
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
+  const [clickedLiElementIndex, setClickedLiElementIndex] = useState(0);
+  const [tasks, setTasks] = useAtom(tasksAtom);
 
   // funkcja, która ustawia initialValue w config
   const processSettingsData = (
     modeName: ModeName,
     { initialPomodoroTime }: { initialPomodoroTime: number }
   ) => {
-    //dlaczego tu przyjmujemy obiekt?, modename to nazwa trybu - nie muszę
     setConfig((oldConfig) => ({
       ...oldConfig,
       [modeName]: { ...oldConfig[modeName], initialTime: initialPomodoroTime },
     }));
   };
 
-  const mode = config[currentMode];
-  //zrobić zamist current time, elapsedTime - czas który upłynął
-
-  const [currentTime, setCurrentTime] = useState(mode.initialTime);
-  // const [currentColor, setCurrentColor] = useState(mode.color);
-
-  const currentColor = mode.color;
+  //zarządzanie motywem strony
+  useEffect(() => {
+    if (currentTheme === "red") {
+      import("./timerAppRedTheme.css");
+    } else if (currentTheme === "white") {
+      import("./timerApp-white-theme.css");
+    }
+  }, [currentTheme]);
 
   useEffect(() => {
     setCurrentTime(mode.initialTime);
   }, [mode.initialTime]);
 
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
-  const [clickedLiElementIndex, setClickedLiElementIndex] = useState(0);
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem("tasks");
-    return savedTasks ? JSON.parse(savedTasks) : [];
-  });
-
-  //Settings.js
-  // const [pomodoroTime, setPomodoroTime] = useState(25);
-  // const [isActiveToggle, setIsActiveToggle] = useState(false);
-
-  //na 15.10 z toggleButton
   const handleAutoStartBreaks = () => {
     setIsTimerRunning(true);
   };
 
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
-
-  // useEffect(() => {
-  //   console.log("Tasks updated: ", tasks);
-  // }, [tasks]);
-
+  //automatyczne zaznaczanie tasków na done - NIE DZIAŁA
   const handleAutoCheckTasks = () => {
     setTasks((oldTasks) => {
       console.log("Before update:", oldTasks); // jakie są stare zadania
@@ -125,10 +109,10 @@ export default function TimerApp() {
       if (newToggles[toggleName].isClicked === true) {
         console.log(`${toggleName} clicked`);
         autoConfig[toggleName]();
-        // newToggles[toggleName].functionToCall();
+        newToggles[toggleName].functionToCall();
       }
 
-      return newToggles; //muszę? - muszę.
+      return newToggles;
     });
   };
   //---------------------------------------------------
@@ -196,6 +180,14 @@ export default function TimerApp() {
     setIsSettingsDialogOpen(!isSettingsDialogOpen);
   };
 
+  // renderowanie ikony lub tekstu w zależności od wybranego motywu
+  const renderStartBtnContent = () => {
+    if (currentTheme === "red") {
+      return isTimerRunning ? "Pause" : "Start";
+    }
+    return <img className="play-icon" src="../../public/icons/play-icon.png" />;
+  };
+
   return (
     <main>
       {/* <SignupPage /> */}
@@ -215,22 +207,16 @@ export default function TimerApp() {
                       <TimerMenuBtn
                         text={"Pomodoro"}
                         modeName={"pomodoro"}
-                        // time={config.pomodoro.initialTime}
-                        // bgc={config.pomodoro.color}
                         handleTimerChange={handleTimerChange1}
                       />
                       <TimerMenuBtn
                         text={"Short Break"}
                         modeName={"shortBreak"}
-                        // time={config.shortBreak.initialTime}
-                        // bgc={config.shortBreak.color}
                         handleTimerChange={handleTimerChange1}
                       />
                       <TimerMenuBtn
                         text={"Long Break"}
                         modeName={"longBreak"}
-                        // time={config.longBreak.initialTime}
-                        // bgc={config.longBreak.color}
                         handleTimerChange={handleTimerChange1}
                       />
                     </div>
@@ -239,7 +225,7 @@ export default function TimerApp() {
                       key={currentTime}
                       initialTimeInMinutes={currentTime}
                       isTimerRunning={isTimerRunning}
-                      handleNextClick1={handleNextClick1}
+                      // handleNextClick1={handleNextClick1}
                     />
 
                     <div className="timer__buttons">
@@ -251,7 +237,17 @@ export default function TimerApp() {
                         onClick={handleStartClick}
                         style={{ color: currentColor }}
                       >
-                        {isTimerRunning ? "Pause" : "Start"}
+                        {/* {isTimerRunning && currentTheme === "red" ? (
+                          "Pause"
+                        ) : !isTimerRunning && currentTheme === "red" ? (
+                          "Start"
+                        ) : (
+                          <img
+                            className="play-icon"
+                            src="../../public/icons/play-icon.png"
+                          />
+                        )} */}
+                        {renderStartBtnContent()}
                       </button>
 
                       {/* Jeśli Timer pracuje wyświetl przycisk przejścia */}
@@ -270,8 +266,6 @@ export default function TimerApp() {
                   </div>
                 </div>
                 <Checklist
-                  tasks={tasks}
-                  setTasks={setTasks}
                   backgroundColor={currentColor}
                   clickedLiElementIndex={clickedLiElementIndex}
                   setClickedLiElementIndex={setClickedLiElementIndex}
@@ -279,18 +273,20 @@ export default function TimerApp() {
               </div>
             </div>
           </div>
+          <ChatWindow />
           {isSettingsOpen && (
             <Settings
               onDataReady={processSettingsData}
-              handleSettingsClick={handleSettingsClick}
+              // handleSettingsClick={handleSettingsClick}
               // setPomodoroTime={setPomodoroTime}
               // pomodoroTime={pomodoroTime}
               // isActiveToggle={isActiveToggle}
               // setIsActiveToggle={setIsActiveToggle}
               toggles={toggles}
               handleToggleClick={handleToggleClick}
-              handleAutoStartBreaks={handleAutoStartBreaks}
-              handleAutoCheckTasks={handleAutoCheckTasks}
+              setCurrentTheme={setCurrentTheme}
+              // handleAutoStartBreaks={handleAutoStartBreaks}
+              // handleAutoCheckTasks={handleAutoCheckTasks}
             />
           )}
         </div>

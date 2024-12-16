@@ -1,0 +1,146 @@
+@import url("https://fonts.googleapis.com/css2?family=Inria+Sans:wght@400;700&display=swap");
+
+body {
+  font-family: "Inria Sans", sans-serif;
+}
+
+.app-box1 {
+  background-color: #d6e3ec !important;
+}
+
+.timer0 {
+  background: linear-gradient(
+    0deg,
+    rgba(219, 223, 228, 1) 0%,
+    rgba(232, 236, 241, 1) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 45px;
+  box-shadow: inset 0px 3px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.timer-menu-btn {
+  padding-bottom: 6px;
+  font-family: "Inria Sans", sans-serif;
+  position: relative;
+  margin-left: 12px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border: none;
+  border-radius: 10px;
+  color: #1f3941;
+  background-color: #fcfbfe;
+  z-index: 1;
+  box-shadow:
+    4px 4px 4px 0px rgba(0, 0, 0, 0.25),
+    1px 1.5px 0.7px 0px rgba(0, 0, 0, 0.2);
+}
+
+.timer-menu-btn::before {
+  content: "";
+  position: absolute; /* Ustawienie pseudo-elementu */
+  top: 4px; /* Rozpoczęcie od góry przycisku */
+  left: 6px;
+  width: 92%; /* Dopasowanie do szerokości przycisku */
+  height: 78%; /* Dopasowanie do wysokości przycisku */
+  /* background-color: green; Kolor pseudo-elementu */
+  z-index: -1; /* Znajduje się za przyciskiem */
+  border-radius: 8px; /* Zaokrąglenie rogów pseudo-elementu */
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1); /* Opcjonalny cień dla efektu wizualnego */
+}
+
+.circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.circle-1 {
+  margin-top: 32px;
+  height: 350px;
+  width: 350px;
+  background: linear-gradient(
+    320deg,
+    rgba(139, 156, 161, 1) 0%,
+    rgba(231, 231, 231, 1) 49%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  box-shadow: 23px 12px 40px -8px rgba(0, 0, 0, 0.3);
+}
+
+.circle-2 {
+  height: 85%;
+  width: 85%;
+  background: linear-gradient(
+    120deg,
+    rgba(139, 156, 161, 1) 0%,
+    rgba(231, 231, 231, 1) 49%,
+    rgba(255, 255, 255, 1) 100%
+  );
+}
+
+.circle-3 {
+  height: 84%;
+  width: 84%;
+  border-radius: 50%;
+  background-color: #1f3941;
+}
+
+.circle-4 {
+  height: 70%;
+  width: 70%;
+  border: 1px solid #9e9e9e;
+  border-radius: 50%;
+  background-color: #1e4955;
+}
+
+.text-box {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.timer-display {
+  /* position: relative; */
+  font-size: 52px;
+  font-weight: bold;
+}
+
+.text-box p {
+  margin: 0;
+}
+
+.timer__button--start {
+  margin-top: 32px;
+  height: 78px;
+  width: 78px;
+  border-radius: 50%;
+  font-family: "Inria Sans", sans-serif;
+  position: relative;
+  border: none;
+  background-color: #fcfbfe;
+  z-index: 1;
+  box-shadow:
+    4px 4px 4px 0px rgba(0, 0, 0, 0.25),
+    1px 1.5px 0.7px 0px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.timer__button--start::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 6px;
+  width: 66px;
+  height: 66px;
+  z-index: -1;
+  border-radius: 50%;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgba(229, 232, 237, 0.4);
+}
+
+.play-icon {
+  margin-left: 10px;
+}

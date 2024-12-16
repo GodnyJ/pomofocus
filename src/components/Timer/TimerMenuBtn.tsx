@@ -1,12 +1,14 @@
-import "./timerMenuBtn.css";
-
 interface TimerMenuBtnProps {
   text: string;
   modeName: string;
   handleTimerChange: (modeName: string) => void;
 }
 
-export default function TimerMenuBtn({ text, modeName, handleTimerChange }: TimerMenuBtnProps) {
+export default function TimerMenuBtn({
+  text,
+  modeName,
+  handleTimerChange,
+}: TimerMenuBtnProps) {
   return (
     <button
       className="timer-menu-btn"

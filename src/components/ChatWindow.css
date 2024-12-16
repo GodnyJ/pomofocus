@@ -1,0 +1,32 @@
+.chat-window {
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-width: 400px;
+}
+
+.chat-window-messages {
+  max-height: 300px;
+  overflow-y: scroll;
+  margin-bottom: 10px;
+}
+
+.chat-window-message {
+  margin: 5px 0;
+}
+
+.chat-window-message.user {
+  text-align: right;
+}
+
+.chat-window-message.assistant {
+  text-align: left;
+}
+
+.chat-window-input {
+  width: calc(100% - 60px);
+  margin-right: 10px;
+}
+
+.chat-window-button {
+  width: 50px;
+}

@@ -225,6 +225,10 @@ h3 img {
   border-radius: 0.4rem;
 }
 
+.settings__color--new-white {
+  background-color: #d6e3ec;
+}
+
 .input__range-box {
   margin-top: 22px;
   display: flex;

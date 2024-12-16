@@ -13,7 +13,6 @@ body {
 }
 
 .app-box1 {
-  background-color: rgb(186, 73, 73);
   min-height: 100vh;
   width: 100%;
   color: white;
@@ -39,12 +38,36 @@ body {
 }
 
 .timer0 {
-  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   padding: 20px 0px 30px;
-  border-radius: 6px;
   margin-bottom: 20px;
   width: 100%;
 }
+
+.timer__menu {
+  padding-top: 20px;
+  /* display: inline-flex;
+  justify-content: center;
+  text-align: center;
+  width: 100%; */
+}
+
+.timer-menu-btn {
+  padding: 4px 16px;
+  height: 40px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* .timer-display {
+  display: inline-block;
+  width: 100%;
+  font-size: 120px;
+  font-weight: bold;
+} */
 
 .settings-div {
   background-color: rgba(0, 0, 0, 0.4);
@@ -92,6 +115,7 @@ body {
 }
 
 .timer__buttons {
+  width: 100%;
   position: relative;
 }
 

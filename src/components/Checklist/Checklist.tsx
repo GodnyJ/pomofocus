@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from "react";
 import "./checklist.css";
 import AddEditTaskForm from "./AddEditTaskForm";
+import { useAtom } from "jotai";
+import { tasksAtom } from "../../atoms";
 
-interface Task {
-  id: number;
-  text: string;
-  pomodoroCount: number;
-  completedPomodoros: number;
-  isDone: boolean;
-}
+// interface Task {
+//   id: number;
+//   text: string;
+//   pomodoroCount: number;
+//   completedPomodoros: number;
+//   isDone: boolean;
+// }
 
 type ChecklistProps = {
-  tasks: Task[];
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>; // ??????????? w wielu miejscach przyjmuje różne argumenty lin 46, 73
+  // tasks: Task[];
+  // setTasks: React.Dispatch<React.SetStateAction<Task[]>>; // ??????????? w wielu miejscach przyjmuje różne argumenty lin 46, 73
   backgroundColor: string;
   clickedLiElementIndex: number;
   setClickedLiElementIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export default function Checklist({
-  tasks,
-  setTasks,
+  // tasks,
+  // setTasks,
   backgroundColor,
   clickedLiElementIndex,
   setClickedLiElementIndex,
@@ -28,6 +30,7 @@ export default function Checklist({
   const [newTask, setNewTask] = useState<string>("");
   const [isAddingTask, setIsAddingTask] = useState(false); // czy tutaj potrzebuje stanu?
   const [pomodoroCount, setPomodoroCount] = useState<number>(1);
+  const [tasks, setTasks] = useAtom(tasksAtom);
 
   function addTask() {
     if (newTask.trim() === "") {

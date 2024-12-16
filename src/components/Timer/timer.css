@@ -7,26 +7,9 @@
   max-width: 480px;
 }
 
-.timer__menu {
+/* .timer__menu {
   display: inline-flex;
   justify-content: center;
   text-align: center;
   width: 100%;
-}
-
-.timer__button--start {
-  margin: 20px 0px 0px;
-  padding: 0px 12px;
-  border-radius: 4px;
-  box-shadow: rgb(235, 235, 235) 0px 6px 0px;
-  font-size: 22px;
-  font-weight: bold;
-  text-transform: uppercase;
-  width: 200px;
-  height: 55px;
-  background-color: white;
-  color: rgb(186, 73, 73);
-  border: none;
-  cursor: pointer;
-  transition: color 0.5s ease-in-out;
-}
+} */

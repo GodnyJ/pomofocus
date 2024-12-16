@@ -5,46 +5,12 @@ import { useState } from "react";
 import { useAtom } from "jotai";
 import { toggleSettingsAtom } from "../../atoms";
 
-function ToggleButton({ isActiveToggle, functionToCall }) {
-  //nowe--------------------------------------
-  //przeniosłam do settings - czy powinnam?
-  // const [toggles, setToggles] = useState({
-  //     autoStartBreaks: {name: "Auto Start Breaks", isClicked: false, functionToCall: handleAutoStartBreaks},
-  //     autoCheckTasks: {name: "Auto Check Tasks", isClicked: false, functionToCall: handleAutoCheckTasks}
-  // })
+interface ToggleButtonProps {
+  isActiveToggle: boolean;
+  functionToCall: () => void;
+}
 
-  // const handleToggleClick = (toggleName) => {
-  //     setToggles((prevToggles) => {
-  //         const newToggles = {
-  //           ...prevToggles,
-  //           [toggleName]: {
-  //             ...prevToggles[toggleName],
-  //             isClicked: !prevToggles[toggleName].isClicked,
-  //           },
-  //         };
-
-  //         if (newToggles[toggleName].isClicked === true ) {
-  //           newToggles[toggleName].functionToCall();
-  //         }
-
-  //         return newToggles; //muszę?
-  //       });
-  //   };
-  //----------------------------------------
-
-  //stare--------------------
-  // const handleClickToggleButton = () => {
-  //     setIsActiveToggle(!isActiveToggle)
-
-  //     console.log(isActiveToggle)
-
-  //     if (isActiveToggle === true) {
-  //         functionToCall();
-  //         console.log('powinno wywołać funkcję function to call')
-  //     }
-  // };
-  //---------------------
-
+function ToggleButton({ isActiveToggle, functionToCall }: ToggleButtonProps) {
   return (
     <div
       className={`settings__toggle-btn ${isActiveToggle ? "settings__toggle-btn-active" : ""}`}
@@ -57,46 +23,72 @@ function ToggleButton({ isActiveToggle, functionToCall }) {
   );
 }
 
+interface ToggleItem {
+  name: string;
+  isClicked: boolean;
+}
+
+interface Toggles {
+  autoStartBreaks: ToggleItem;
+  autoCheckTasks: ToggleItem;
+}
+
+type ModeName = "pomodoro" | "shortBreak" | "longBreak";
+
 interface SettingsProp {
   onDataReady: (
-    modeName: string,
+    modeName: ModeName,
     data: { initialPomodoroTime: number }
   ) => void;
-  toggles: boolean;
+  toggles: Toggles;
   handleToggleClick: (arg: string) => void;
+  setCurrentTheme: (arg: string) => void;
 }
 
 export default function Settings({
   onDataReady,
-
   toggles,
-  // handleAutoStartBreaks, tego nie potrzebuję bo handle toggle tutaj wywołuje  nazwą a nie tą fnckją
-  // handleAutoCheckTasks,
   handleToggleClick,
-
-  // handleSettingsClick,
-  // setPomodoroTime,
-  // pomodoroTime,
-  // isActiveToggle,
-  // setIsActiveToggle
+  setCurrentTheme,
 }: SettingsProp) {
-  //na 05.11
   const [, toggleSettings] = useAtom(toggleSettingsAtom);
-
-  //na 15.10
   const [pomodoroTime, setPomodoroTime] = useState(25);
   const [shortBreakTime, setShortBreakTime] = useState(5);
   const [longBreakTime, setLongBreakTime] = useState(10);
 
-  const handlePomodoroTimeInputChange = (e) => {
-    setPomodoroTime(e.target.value);
+  //=>
+  const [timeSettings, setTimeSettings] = useState({
+    pomodoro: 25,
+    shortBreak: 5,
+    longBreak: 15,
+  }); //
+
+  const handlePomodoroTimeInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPomodoroTime(Number(e.target.value));
   };
-  const handleShortBreakTimeInputChange = (e) => {
-    setShortBreakTime(e.target.value);
+
+  const handleShortBreakTimeInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setShortBreakTime(Number(e.target.value));
   };
-  const handleLongBreakTimeInputChange = (e) => {
-    setLongBreakTime(e.target.value);
+
+  const handleLongBreakTimeInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setLongBreakTime(Number(e.target.value));
   };
+
+  //=>
+  const handleTimeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setTimeSettings((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }; //
 
   const handleOkButton = () => {
     onDataReady("pomodoro", { initialPomodoroTime: pomodoroTime });
@@ -273,8 +265,14 @@ export default function Settings({
               <span>Color Themes</span>
               <div className="settings__color-box">
                 <div className="settings__color settings__color--pomodor"></div>
-                <div className="settings__color settings__color--short-break"></div>
-                <div className="settings__color settings__color--long-break"></div>
+                <div
+                  onClick={() => setCurrentTheme("red")}
+                  className="settings__color settings__color--new-white"
+                ></div>
+                <div
+                  onClick={() => setCurrentTheme("white")}
+                  className="settings__color settings__color--long-break"
+                ></div>
               </div>
             </div>
 

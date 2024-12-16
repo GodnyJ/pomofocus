@@ -14,17 +14,7 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-import React, { useEffect, useState } from "react";
-import "./timerDisplay.css";
+import { useEffect, useState } from "react";
 
 interface TimerDispleyProps {
   initialTimeInMinutes: number;
@@ -63,7 +53,21 @@ export default function TimerDisplay({
     }
   }, [isTimerRunning]);
 
-  return <span className="timer-display">{formatTime(timeLeft)}</span>;
+  return (
+    <div className="circle circle-1">
+      <div className="circle circle-2">
+        <div className="circle circle-3">
+          <div className="loader"></div>
+          <div className="circle circle-4">
+            <div className="text-box">
+              <span className="timer-display">{formatTime(timeLeft)}</span>
+              <p>TASK #1</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 //bląd któy napotkałam to to że do timeleft przypisałam wartość {time} czyli obiekt z propsów
