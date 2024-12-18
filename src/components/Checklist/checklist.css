@@ -183,3 +183,11 @@
   opacity: 0.8;
   color: white;
 }
+
+.subtask-box {
+  margin-top: 40px;
+  margin-left: 60px;
+  width: 100px;
+  height: 20px;
+  background-color: red;
+}

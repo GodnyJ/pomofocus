@@ -1,17 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import "./ChatWindow.css";
 import { useAtom } from "jotai";
-import { tasksAtom } from "../atoms";
-
-interface Task {
-  id: number;
-  text: string;
-  pomodoroCount: number;
-  completedPomodoros: number;
-  isDone: boolean;
-}
-
+import { tasksAtom } from "../atoms/atoms";
 interface Message {
   role: "user" | "assistant" | "system";
   content: string;
@@ -20,20 +11,21 @@ interface Message {
 }
 
 export default function ChatWindow() {
-  const [tasks, setTasks] = useAtom<Task[]>(tasksAtom);
+  const [tasks, setTasks] = useAtom(tasksAtom);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
 
   const handleAddMultipleTasks = (taskTexts: string[]) => {
-    const newTasks = taskTexts.map((taskText, index) => ({
+    const newSubtasks = taskTexts.map((taskText, index) => ({
       id: tasks.length + index + 1,
       text: taskText,
       pomodoroCount: 1,
       completedPomodoros: 0,
       isDone: false,
     }));
+    console.log({ newSubtasks });
 
-    setTasks((prev) => [...prev, ...newTasks]);
+    setTasks((prev) => [...prev, ...newSubtasks]);
   };
 
   const handleSend = async () => {
@@ -46,7 +38,7 @@ export default function ChatWindow() {
     const tasksContext = `Oto lista zadań:
 ${tasks.map((task) => `- ${task.text}, id: ${task.id}`)}`;
 
-    console.log(tasksContext);
+    // console.log(tasksContext);
 
     const apiMessages: Message[] = [
       { role: "system", content: userInfo },

@@ -1,61 +1,57 @@
-import React, { ChangeEventHandler } from "react";
-import "./addEditTaskForm.css";
+import { useAtom } from "jotai";
+import "./task-form.css";
+import {
+  newTaskInputTextAtom,
+  handleNewPomodoroCountInputChangeAtom,
+  increaseNewPomodoroContAtom,
+  decreaseNewPomodoroCountAtom,
+  newPomodoroCountAtom,
+} from "../checklist-atoms";
+import { addTaskAtom } from "../../../atoms/atoms";
 
-type VoidFunction = () => void;
+export default function TaskForm() {
+  const [newTaskInputText, setNewTaskInputText] = useAtom(newTaskInputTextAtom);
+  const [newPomodoroCount] = useAtom(newPomodoroCountAtom);
+  const [, handleNewPomodoroCountInputChange] = useAtom(
+    handleNewPomodoroCountInputChangeAtom
+  );
+  const [, increaseNewPomodoroCount] = useAtom(increaseNewPomodoroContAtom);
+  const [, decreaseNewPomodoroCount] = useAtom(decreaseNewPomodoroCountAtom);
+  const [, addTask] = useAtom(addTaskAtom);
 
-interface AddEditTaskFormProps {
-  addTask: VoidFunction;
-  handleTaskInputChange: (value: string) => void;
-  newTask: string;
-  pomodoroCount: number;
-  increasePomodoroCount: VoidFunction;
-  decreasePomodoroCount: VoidFunction;
-  handlePomodoroInput: (value: number) => void;
-}
-
-export default function AddEditTaskForm({
-  addTask,
-  handleTaskInputChange,
-  newTask,
-  pomodoroCount,
-  increasePomodoroCount,
-  decreasePomodoroCount,
-  handlePomodoroInput,
-}: AddEditTaskFormProps) {
   return (
     <div className="form-box">
       <div className="form__up-site">
-        {/* <p style={{color:"black"}}>{newTask}</p> */}
         <input
           className="form-input__task-name"
           type="text"
           placeholder="What are you working on?"
-          onChange={(e) => handleTaskInputChange(e.target.value)}
-          value={newTask}
+          onChange={(e) => setNewTaskInputText(e.target.value)}
+          value={newTaskInputText}
         />
-
         <span className="form__title-est-pom">Est Pomodoros</span>
-
         {/* Pomodoro counter */}
         <div className="form__pom-settings">
           <input
             type="number"
             min="0"
             step="1"
-            onChange={(e) => handlePomodoroInput(Number(e.target.value))}
-            value={pomodoroCount}
+            onChange={(e) =>
+              handleNewPomodoroCountInputChange(Number(e.target.value))
+            }
+            value={newPomodoroCount}
             readOnly
           />
           <div className="form-btns__pom-settins">
             <button
               className="form-btn_pom-settins--up"
-              onClick={increasePomodoroCount}
+              onClick={increaseNewPomodoroCount}
             >
               <img src="icons/caret-up.png" alt="up icon" />
             </button>
             <button
               className="form-btn_pom-settins--down"
-              onClick={decreasePomodoroCount}
+              onClick={decreaseNewPomodoroCount}
             >
               <img src="icons/caret-down.png" alt="down icon" />
             </button>

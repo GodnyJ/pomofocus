@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
-import { isSettingsOpenAtom, tasksAtom } from "../atoms";
+import { isSettingsOpenAtom, tasksAtom } from "../atoms/atoms";
 import Checklist from "./Checklist/Checklist";
 import Navbar from "./Navbar/Navbar";
 import TimerDisplay from "./Timer/TimerDisplay";
@@ -16,13 +16,15 @@ const initialConfig = {
   longBreak: { initialTime: 10, color: "rgb(57, 112, 151)" },
 };
 
+type ToggleName = "autoStartBreaks" | "autoCheckTasks";
+
 type ModeName = keyof typeof initialConfig;
 
 export default function TimerApp() {
   const [isSettingsOpen] = useAtom(isSettingsOpenAtom); //tylko odczytuję wartość więc czy powinnam zmienić z useAtom na useAtomValue? jak to się ma do renderów?
 
   const [currentMode, setCurrentMode] = useState<ModeName>("pomodoro");
-  const [currentTheme, setCurrentTheme] = useState("white"); //lub white
+  const [currentTheme, setCurrentTheme] = useState("red"); //lub white
   const [config, setConfig] = useState(initialConfig);
   const mode = config[currentMode];
   const [currentTime, setCurrentTime] = useState(mode.initialTime); //zrobić zamist current time, elapsedTime - czas który upłynął
@@ -96,7 +98,7 @@ export default function TimerApp() {
     },
   });
 
-  const handleToggleClick = (toggleName) => {
+  const handleToggleClick = (toggleName: ToggleName) => {
     setToggles((prevToggles) => {
       const newToggles = {
         ...prevToggles,
@@ -109,7 +111,7 @@ export default function TimerApp() {
       if (newToggles[toggleName].isClicked === true) {
         console.log(`${toggleName} clicked`);
         autoConfig[toggleName]();
-        newToggles[toggleName].functionToCall();
+        // newToggles[toggleName].functionToCall();
       }
 
       return newToggles;

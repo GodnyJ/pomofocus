@@ -3,7 +3,7 @@ import "./settings.css";
 import DropdownSelect from "./DropdownSelect";
 import { useState } from "react";
 import { useAtom } from "jotai";
-import { toggleSettingsAtom } from "../../atoms";
+import { toggleSettingsAtom } from "../../atoms/atoms";
 
 interface ToggleButtonProps {
   isActiveToggle: boolean;
@@ -41,7 +41,7 @@ interface SettingsProp {
     data: { initialPomodoroTime: number }
   ) => void;
   toggles: Toggles;
-  handleToggleClick: (arg: string) => void;
+  handleToggleClick: (arg: keyof Toggles) => void;
   setCurrentTheme: (arg: string) => void;
 }
 

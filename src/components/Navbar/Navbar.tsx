@@ -2,7 +2,7 @@ import React from "react";
 import "./navbar.css";
 import NavButton from "./NavButton";
 import { useAtom, useSetAtom } from "jotai";
-import { toggleSettingsAtom } from "../../atoms";
+import { toggleSettingsAtom } from "../../atoms/atoms";
 
 // interface NavBarProps {
 //   handleSettingsClick: () => void;
