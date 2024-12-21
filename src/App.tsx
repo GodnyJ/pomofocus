@@ -8,7 +8,7 @@ import {
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 import SignupPage from "./components/Authentication/SignupPage";
-import TimerApp from "./components/TimerApp";
+import TimerApp from "./components/timer-app/timer-app";
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);

@@ -1,6 +1,8 @@
 import { atom } from "jotai";
 
 export const newTaskInputTextAtom = atom(""); //newTask - też do task-form
+//atom przechowujący id klikniętego elementu
+export const clickedLiElementIndexAtom = atom<number | null>(null); // do timer-app
 
 //set do newTaskTextAtom - czyli przekazuje do stanu tekst z inputu
 //value - wartość na jaką ma być ustawiony stan
@@ -16,7 +18,7 @@ export const handleTaskInputChangeAtom = atom(
 //do ustawiania liczby pomodoro w task form nowego zadania
 export const newPomodoroCountAtom = atom(1); //pomodoroCount - też do task-form
 
-// funkcja pobierająca liczbę z inputu task-form i ustawiająca stan pomodoroCount dla danego zadania
+// funkcja pobierająca liczbę z input(???) task-form i ustawiająca stan pomodoroCount dla danego zadania
 export const handleNewPomodoroCountInputChangeAtom = atom(
   null,
   (_get, set, value: number) => {
@@ -42,3 +44,11 @@ export const isTaskFormOpenAtom = atom(false); //isAddingTask - pokazywanie i ch
 export const handleTaskFormOpenAtom = atom(null, (_get, set) => {
   set(isTaskFormOpenAtom, true);
 });
+
+//ustawia id klikniętego elementu checklisty
+export const setClickedLiElementIndexAtom = atom(
+  null,
+  (_get, set, taskId: number) => {
+    set(clickedLiElementIndexAtom, taskId);
+  }
+);

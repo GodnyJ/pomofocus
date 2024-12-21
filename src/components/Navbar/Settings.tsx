@@ -1,9 +1,12 @@
-import React from "react";
 import "./settings.css";
 import DropdownSelect from "./DropdownSelect";
-import { useState } from "react";
-import { useAtom } from "jotai";
-import { toggleSettingsAtom } from "../../atoms/atoms";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import {
+  toggleSettingsAtom,
+  updateConfigAtom,
+  initialConfigAtom,
+  isSettingsOpenAtom,
+} from "../../atoms/atoms";
 
 interface ToggleButtonProps {
   isActiveToggle: boolean;
@@ -36,67 +39,84 @@ interface Toggles {
 type ModeName = "pomodoro" | "shortBreak" | "longBreak";
 
 interface SettingsProp {
-  onDataReady: (
-    modeName: ModeName,
-    data: { initialPomodoroTime: number }
-  ) => void;
+  // onDataReady: (
+  //   modeName: ModeName,
+  //   data: { initialPomodoroTime: number }
+  // ) => void;
   toggles: Toggles;
   handleToggleClick: (arg: keyof Toggles) => void;
   setCurrentTheme: (arg: string) => void;
 }
 
 export default function Settings({
-  onDataReady,
+  // onDataReady,
   toggles,
   handleToggleClick,
   setCurrentTheme,
 }: SettingsProp) {
   const [, toggleSettings] = useAtom(toggleSettingsAtom);
-  const [pomodoroTime, setPomodoroTime] = useState(25);
-  const [shortBreakTime, setShortBreakTime] = useState(5);
-  const [longBreakTime, setLongBreakTime] = useState(10);
+  const initialConfig = useAtomValue(initialConfigAtom);
+  const updateConfig = useSetAtom(updateConfigAtom);
+  const setIsSettingsOpen = useSetAtom(isSettingsOpenAtom);
 
-  //=>
-  const [timeSettings, setTimeSettings] = useState({
-    pomodoro: 25,
-    shortBreak: 5,
-    longBreak: 15,
-  }); //
+  // const [pomodoroTime, setPomodoroTime] = useState(25);
+  // const [shortBreakTime, setShortBreakTime] = useState(5);
+  // const [longBreakTime, setLongBreakTime] = useState(10);
 
-  const handlePomodoroTimeInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+  // //=>
+  // const [timeSettings, setTimeSettings] = useState({
+  //   pomodoro: 25,
+  //   shortBreak: 5,
+  //   longBreak: 15,
+  // }); //
+
+  const handleTimeChange = (
+    modeName: keyof typeof initialConfig,
+    value: number
   ) => {
-    setPomodoroTime(Number(e.target.value));
+    updateConfig({
+      modeName,
+      initialPomodoroTime: value,
+    });
   };
 
-  const handleShortBreakTimeInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setShortBreakTime(Number(e.target.value));
-  };
+  // const handlePomodoroTimeInputChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setPomodoroTime(Number(e.target.value));
+  // };
 
-  const handleLongBreakTimeInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setLongBreakTime(Number(e.target.value));
-  };
+  // const handleShortBreakTimeInputChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setShortBreakTime(Number(e.target.value));
+  // };
 
-  //=>
-  const handleTimeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setTimeSettings((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  }; //
+  // const handleLongBreakTimeInputChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setLongBreakTime(Number(e.target.value));
+  // };
 
-  const handleOkButton = () => {
-    onDataReady("pomodoro", { initialPomodoroTime: pomodoroTime });
-    onDataReady("shortBreak", { initialPomodoroTime: shortBreakTime });
-    onDataReady("longBreak", { initialPomodoroTime: longBreakTime });
-    toggleSettings();
-    // console.log(pomodoroTime)
-  };
+  // //=>
+  // const handleTimeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setTimeSettings((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // }; //
+
+  // const handleOkButton = () => {
+  // updateConfig({ modeName: "pomodoro", initialPomodoroTime: pomodoroTime });
+  // updateConfig({
+  //   modeName: "shortBreak",
+  //   initialPomodoroTime: shortBreakTime,
+  // });
+  // updateConfig({ modeName: "longBreak", initialPomodoroTime: longBreakTime });
+  // setIsSettingsOpen(false);
+  // console.log("ok");
+  // };
   //tu koniec
 
   return (
@@ -123,10 +143,13 @@ export default function Settings({
                 <input
                   className="input__number"
                   type="number"
-                  defaultValue={pomodoroTime}
+                  defaultValue={initialConfig.pomodoro.initialTime}
                   min="0"
                   step="1"
-                  onChange={handlePomodoroTimeInputChange}
+                  // onChange={handlePomodoroTimeInputChange}
+                  onChange={(e) =>
+                    handleTimeChange("pomodoro", Number(e.target.value))
+                  }
                 />
               </div>
               <div>
@@ -134,10 +157,12 @@ export default function Settings({
                 <input
                   className="input__number"
                   type="number"
-                  defaultValue={shortBreakTime}
+                  defaultValue={initialConfig.shortBreak.initialTime}
                   min="0"
                   step="1"
-                  onChange={handleShortBreakTimeInputChange}
+                  onChange={(e) =>
+                    handleTimeChange("shortBreak", Number(e.target.value))
+                  }
                 />
               </div>
               <div>
@@ -145,10 +170,12 @@ export default function Settings({
                 <input
                   className="input__number"
                   type="number"
-                  defaultValue={longBreakTime}
+                  defaultValue={initialConfig.longBreak.initialTime}
                   min="0"
                   step="1"
-                  onChange={handleLongBreakTimeInputChange}
+                  onChange={(e) =>
+                    handleTimeChange("longBreak", Number(e.target.value))
+                  }
                 />
               </div>
             </div>
@@ -372,7 +399,7 @@ export default function Settings({
             </div>
           </div>
           <div className="settings__footer">
-            <button onClick={handleOkButton}>OK</button>
+            <button onClick={() => setIsSettingsOpen(false)}>OK</button>
           </div>
         </div>
       </div>

@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
-import { useAtom } from "jotai";
-import { isSettingsOpenAtom, tasksAtom } from "../atoms/atoms";
-import Checklist from "./Checklist/Checklist";
-import Navbar from "./Navbar/Navbar";
-import TimerDisplay from "./Timer/TimerDisplay";
-import TimerMenuBtn from "./Timer/TimerMenuBtn";
-import Settings from "./Navbar/Settings";
-import ChatWindow from "./ChatWindow";
-import "./timerApp.css";
-import "./Timer/timer.css";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { isSettingsOpenAtom, tasksAtom } from "../../atoms/atoms";
+import Checklist from "../Checklist/Checklist";
+import Navbar from "../Navbar/Navbar";
+import TimerDisplay from "../Timer/TimerDisplay";
+import TimerMenu from "../Timer/timer-menu";
+import Settings from "../Navbar/Settings";
+import ChatWindow from "../ChatWindow";
+import "./timer-app.css";
+import "../Timer/timer.css";
+import { clickedLiElementIndexAtom } from "../Checklist/checklist-atoms";
+import {
+  initialConfigAtom,
+  currentModeAtom,
+  isTimerRunningAtom,
+  currentTimeAtom,
+} from "../../atoms/atoms";
 
 const initialConfig = {
   pomodoro: { initialTime: 25, color: "rgb(186, 73, 73)" },
@@ -17,68 +24,124 @@ const initialConfig = {
 };
 
 type ToggleName = "autoStartBreaks" | "autoCheckTasks";
-
 type ModeName = keyof typeof initialConfig;
 
 export default function TimerApp() {
+  const [initialConfig, setInitialConfig] = useAtom(initialConfigAtom); //?
+  // const currentMode = use;
   const [isSettingsOpen] = useAtom(isSettingsOpenAtom); //tylko odczytuję wartość więc czy powinnam zmienić z useAtom na useAtomValue? jak to się ma do renderów?
+  const [, setTasks] = useAtom(tasksAtom);
 
-  const [currentMode, setCurrentMode] = useState<ModeName>("pomodoro");
+  // const [currentMode, setCurrentMode] = useState<ModeName>("pomodoro");
+  // const currentMode = useAtomValue(currentModeAtom);
+  // const setCurrentMode = useSetAtom(currentModeAtom);
+  const [currentMode, setCurrentMode] = useAtom(currentModeAtom);
+  // const [config, setConfig] = useState(initialConfig);
+  // const [currentTime, setCurrentTime] = useState(
+  //   config[currentMode].initialTime
+  // );
+
+  const currentTime = useAtomValue(currentTimeAtom);
+
+  const [isTimerRunning, setIsTimerRunning] = useAtom(isTimerRunningAtom);
+
   const [currentTheme, setCurrentTheme] = useState("red"); //lub white
-  const [config, setConfig] = useState(initialConfig);
-  const mode = config[currentMode];
-  const [currentTime, setCurrentTime] = useState(mode.initialTime); //zrobić zamist current time, elapsedTime - czas który upłynął
-  const currentColor = mode.color;
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
-  const [clickedLiElementIndex, setClickedLiElementIndex] = useState(0);
-  const [tasks, setTasks] = useAtom(tasksAtom);
 
-  // funkcja, która ustawia initialValue w config
-  const processSettingsData = (
-    modeName: ModeName,
-    { initialPomodoroTime }: { initialPomodoroTime: number }
-  ) => {
-    setConfig((oldConfig) => ({
-      ...oldConfig,
-      [modeName]: { ...oldConfig[modeName], initialTime: initialPomodoroTime },
-    }));
-  };
+  const [clickedLiElementIndex] = useAtom(clickedLiElementIndexAtom);
+  // const mode = initialConfig[currentMode];
+  const currentColor = initialConfig[currentMode].color;
 
   //zarządzanie motywem strony
   useEffect(() => {
     if (currentTheme === "red") {
-      import("./timerAppRedTheme.css");
+      import("./timer-app-red-theme.css");
     } else if (currentTheme === "white") {
-      import("./timerApp-white-theme.css");
+      import("./timer-app-white-theme.css");
     }
   }, [currentTheme]);
 
-  useEffect(() => {
-    setCurrentTime(mode.initialTime);
-  }, [mode.initialTime]);
+  //aktualizacja czasu przy zmianie trybu
+  // już nie potzrebuję useEffect bo to zadanie przejmuje atom pochodny?
+  //currentTimeAtom automatycznie aktualizuje wartość gdy currentMode lub initialConfig się zmienią?
+  // useEffect(() => {
+  //   setCurrentTime(mode.initialTime);
+  // }, [mode.initialTime]);
+
+  //start/pauza timera
+  const handleStartClickR = () => {
+    setIsTimerRunning((prev) => !prev);
+  };
+
+  // obsługa przejścia do kolejnego trybu
+  const handleNextClick1 = () => {
+    if (currentMode === "pomodoro") {
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task.id === clickedLiElementIndex
+            ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
+            : task
+        )
+      );
+
+      // Sprawdzam, czy opcja "Auto Check Tasks" jest włączona
+      if (toggles.autoCheckTasks.isClicked) {
+        handleAutoCheckTasks();
+      } // Wywołanie funkcji tylko wtedy, gdy toggle jest na "true"
+
+      // przejście do trybu "shortBreak"
+      // handleTimerChange1("shortBreak");
+      setCurrentMode("shortBreak");
+    } else {
+      // przejście do trybu "pomodoro" z dowolnego innego trybu
+      // handleTimerChange1("pomodoro");
+      setCurrentMode("pomodoro");
+    }
+  };
+
+  // Automatyczne sprawdzanie zadań - nowe
+  const handleAutoCheckTasksR = () => {
+    setTasks((tasks) =>
+      tasks.map((task) =>
+        task.completedPomodoros >= task.pomodoroCount
+          ? { ...task, isDone: true }
+          : task
+      )
+    );
+  };
+
+  //-------------------------------------
+  // funkcja, która ustawia initialValue w config
+  // const processSettingsData = (
+  //   modeName: ModeName,
+  //   { initialPomodoroTime }: { initialPomodoroTime: number }
+  // ) => {
+  //   setInitialConfig((oldConfig) => ({
+  //     ...oldConfig,
+  //     [modeName]: { ...oldConfig[modeName], initialTime: initialPomodoroTime },
+  //   }));
+  // };
 
   const handleAutoStartBreaks = () => {
     setIsTimerRunning(true);
   };
 
-  //automatyczne zaznaczanie tasków na done - NIE DZIAŁA
+  //automatyczne zaznaczanie tasków na done
   const handleAutoCheckTasks = () => {
     setTasks((oldTasks) => {
       console.log("Before update:", oldTasks); // jakie są stare zadania
 
       // nowa tablica zamiast aktualizować w miejscu dla pewności
       const updatedTasks = oldTasks.map((task) => {
-        const pomodoroCount = Number(task.pomodoroCount);
+        const pomodoroCount = task.pomodoroCount;
         const completedPomodoros = Number(task.completedPomodoros);
         return completedPomodoros >= pomodoroCount
           ? { ...task, isDone: true }
           : task;
       });
 
-      console.log("After update:", updatedTasks); //czy zadania się zmieniają
+      console.log("After update:", updatedTasks);
 
-      return [...updatedTasks]; // tworze tablice aby React wymusił ponowne renderowanie - ale to nic nie dało
+      return [...updatedTasks];
     });
   };
 
@@ -118,69 +181,43 @@ export default function TimerApp() {
     });
   };
   //---------------------------------------------------
+  //zastąpione
+  // const handleTimerChange1 = (modeName) => {
+  //   const selectedMode = config[modeName];
 
-  const handleTimerChange1 = (modeName) => {
-    const selectedMode = config[modeName];
+  //   setCurrentTime(selectedMode.initialTime);
+  //   // setCurrentColor(selectedMode.color);
+  //   setCurrentMode(modeName);
+  // };
 
-    setCurrentTime(selectedMode.initialTime);
-    // setCurrentColor(selectedMode.color);
-    setCurrentMode(modeName);
-    console.log(currentMode);
-    console.log(currentColor);
-    console.log(selectedMode.color);
-  };
+  // const handleTimerChange1 = (modeName: keyof typeof initialConfig) => {
+  //   setCurrentMode(modeName);
+  // };
 
-  const handleStartClick = () => {
-    if (currentTime !== 0) {
-      setIsTimerRunning(!isTimerRunning);
-    }
+  //zastąpione
+  // const handleStartClick = () => {
+  //   if (currentTime !== 0) {
+  //     setIsTimerRunning(!isTimerRunning);
+  //   }
 
-    if (
-      !isTimerRunning &&
-      currentTime === 0 &&
-      clickedLiElementIndex !== null
-    ) {
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === clickedLiElementIndex
-            ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
-            : task
-        )
-      );
-    }
-  };
+  //   if (
+  //     !isTimerRunning &&
+  //     currentTime === 0 &&
+  //     clickedLiElementIndex !== null
+  //   ) {
+  //     setTasks((prevTasks) =>
+  //       prevTasks.map((task) =>
+  //         task.id === clickedLiElementIndex
+  //           ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
+  //           : task
+  //       )
+  //     );
+  //   }
+  // };
 
-  //aktualnie w użyciu
-  const handleNextClick1 = () => {
-    if (currentMode === "pomodoro") {
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === clickedLiElementIndex
-            ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
-            : task
-        )
-      );
-
-      // Sprawdzam, czy opcja "Auto Check Tasks" jest włączona
-      if (toggles.autoCheckTasks.isClicked) {
-        handleAutoCheckTasks();
-      } // Wywołanie funkcji tylko wtedy, gdy toggle jest na "true"
-
-      //switch
-      handleTimerChange1("shortBreak");
-      // setCurrentMode("shortBreak")
-    } else if (currentMode === "shortBreak") {
-      handleTimerChange1("pomodoro");
-      // setCurrentMode("pomodoro")
-    } else if (currentMode === "longBreak") {
-      handleTimerChange1("pomodoro");
-      // setCurrentMode("pomodoro")
-    }
-  };
-
-  const handleSettingsClick = () => {
-    setIsSettingsDialogOpen(!isSettingsDialogOpen);
-  };
+  // const handleSettingsClick = () => {
+  //   setIsSettingsDialogOpen(!isSettingsDialogOpen);
+  // };
 
   // renderowanie ikony lub tekstu w zależności od wybranego motywu
   const renderStartBtnContent = () => {
@@ -206,21 +243,7 @@ export default function TimerApp() {
                 <div className="timer1">
                   <div className="timer0">
                     <div className="timer__menu">
-                      <TimerMenuBtn
-                        text={"Pomodoro"}
-                        modeName={"pomodoro"}
-                        handleTimerChange={handleTimerChange1}
-                      />
-                      <TimerMenuBtn
-                        text={"Short Break"}
-                        modeName={"shortBreak"}
-                        handleTimerChange={handleTimerChange1}
-                      />
-                      <TimerMenuBtn
-                        text={"Long Break"}
-                        modeName={"longBreak"}
-                        handleTimerChange={handleTimerChange1}
-                      />
+                      <TimerMenu />
                     </div>
                     {/* Licznik */}
                     <TimerDisplay
@@ -236,7 +259,8 @@ export default function TimerApp() {
                         className={`timer__button--start ${
                           isTimerRunning ? "timer__button--start-active" : ""
                         }`}
-                        onClick={handleStartClick}
+                        // onClick={handleStartClick}
+                        onClick={handleStartClickR}
                         style={{ color: currentColor }}
                       >
                         {/* {isTimerRunning && currentTheme === "red" ? (
@@ -269,8 +293,8 @@ export default function TimerApp() {
                 </div>
                 <Checklist
                   backgroundColor={currentColor}
-                  clickedLiElementIndex={clickedLiElementIndex}
-                  setClickedLiElementIndex={setClickedLiElementIndex}
+                  // clickedLiElementIndex={clickedLiElementIndex}
+                  // setClickedLiElementIndex={setClickedLiElementIndex}
                 />
               </div>
             </div>
@@ -278,17 +302,10 @@ export default function TimerApp() {
           <ChatWindow />
           {isSettingsOpen && (
             <Settings
-              onDataReady={processSettingsData}
-              // handleSettingsClick={handleSettingsClick}
-              // setPomodoroTime={setPomodoroTime}
-              // pomodoroTime={pomodoroTime}
-              // isActiveToggle={isActiveToggle}
-              // setIsActiveToggle={setIsActiveToggle}
+              // onDataReady={processSettingsData}
               toggles={toggles}
               handleToggleClick={handleToggleClick}
               setCurrentTheme={setCurrentTheme}
-              // handleAutoStartBreaks={handleAutoStartBreaks}
-              // handleAutoCheckTasks={handleAutoCheckTasks}
             />
           )}
         </div>
@@ -296,3 +313,6 @@ export default function TimerApp() {
     </main>
   );
 }
+
+//skończyłam na tym że nie działa ustawianie czasu z palca w settings, - processettingsdata
+//dodatkowo trzeba wyniesć funckję handletimerchange to jest też w timermenubtn

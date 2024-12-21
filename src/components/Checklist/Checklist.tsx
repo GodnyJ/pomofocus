@@ -1,142 +1,30 @@
 import React, { useState } from "react";
 import "./checklist.css";
 import TaskForm from "./task-form/task-form";
-import { useAtom } from "jotai";
-import { tasksAtom, addTaskAtom } from "../../atoms/atoms";
+import { useAtom, useAtomValue } from "jotai";
 import {
-  newTaskInputTextAtom,
-  newPomodoroCountAtom,
+  tasksAtom,
+  initialConfigAtom,
+  currentModeAtom,
+} from "../../atoms/atoms";
+import {
   isTaskFormOpenAtom,
   handleTaskFormOpenAtom,
+  clickedLiElementIndexAtom,
+  setClickedLiElementIndexAtom,
 } from "./checklist-atoms";
 
-const initialTasks = [
-  {
-    id: 1,
-    text: "task nr 1",
-    pomodoroCount: 1,
-    completedPomodoros: 0,
-    isDone: false,
-    subtasks: [
-      {
-        id: 11,
-        text: "subtask nr 1",
-        pomodoroCount: 1,
-        completedPomodoros: 0,
-        isDone: false,
-      },
-      {
-        id: 12,
-        text: "subtask nr 2",
-        pomodoroCount: 2,
-        completedPomodoros: 0,
-        isDone: false,
-      },
-      {
-        id: 13,
-        text: "subtask nr 3",
-        pomodoroCount: 2,
-        completedPomodoros: 0,
-        isDone: false,
-      },
-    ],
-  },
-  {
-    id: 2,
-    text: "task nr 2",
-    pomodoroCount: 1,
-    completedPomodoros: 0,
-    isDone: false,
-    subtasks: [
-      {
-        id: 21,
-        text: "subtask nr 21",
-        pomodoroCount: 1,
-        completedPomodoros: 0,
-        isDone: false,
-      },
-      {
-        id: 22,
-        text: "subtask nr 22",
-        pomodoroCount: 2,
-        completedPomodoros: 0,
-        isDone: false,
-      },
-      {
-        id: 23,
-        text: "subtask nr 23",
-        pomodoroCount: 2,
-        completedPomodoros: 0,
-        isDone: false,
-      },
-    ],
-  },
-];
-
-type ChecklistProps = {
-  backgroundColor: string;
-  clickedLiElementIndex: number;
-  setClickedLiElementIndex: React.Dispatch<React.SetStateAction<number>>;
-};
-
-export default function Checklist({
-  backgroundColor,
-  clickedLiElementIndex,
-  setClickedLiElementIndex,
-}: ChecklistProps) {
-  const [newTask, setNewTask] = useState<string>("");
-  const [isAddingTask, setIsAddingTask] = useState(false); // czy tutaj potrzebuje stanu?
-  const [pomodoroCount, setPomodoroCount] = useState<number>(1);
+export default function Checklist() {
+  const initialConfig = useAtomValue(initialConfigAtom);
+  const currentMode = useAtomValue(currentModeAtom);
+  const backgroundColor = initialConfig[currentMode].color;
   const [tasks, setTasks] = useAtom(tasksAtom);
-  // const [tasks, setTasks] = useState(initialTasks);
-
-  const [newTaskInputText, setNewTaskInputText] = useAtom(newTaskInputTextAtom);
-  const [newPomodoroCount] = useAtom(newPomodoroCountAtom);
   const [isTaskFormOpen] = useAtom(isTaskFormOpenAtom);
   const [, handleTaskFormOpen] = useAtom(handleTaskFormOpenAtom);
-  const [, addTask] = useAtom(addTaskAtom);
+  const [clickedLiElementIndex] = useAtom(clickedLiElementIndexAtom);
+  const [, setClickedLiElementIndex] = useAtom(setClickedLiElementIndexAtom);
 
-  // function addTask() {
-  //   // if (newTask.trim() === "") {
-  //   if (newTaskInputText.trim() === "") {
-  //     return;
-  //   }
-
-  //   const newTaskObj = {
-  //     id: Date.now(),
-  //     // text: newTask,
-  //     text: newTaskInputText,
-  //     // pomodoroCount: pomodoroCount,
-  //     pomodoroCount: newPomodoroCount,
-  //     completedPomodoros: 0,
-  //     isDone: false,
-  //   };
-  //   setTasks([...tasks, newTaskObj]);
-  //   // setNewTask("");
-  //   setNewTaskInputText("");
-  //   setIsAddingTask(false);
-  // }
-
-  //teraz jest handleTaskInputChangeAtom
-  // const handleTaskInputChange = (taskTitle: string) => {
-  //   setNewTask(taskTitle);
-  // };
-
-  // Funkcja pobierająca liczbę z inputu pomodoro i ustawiająca stan pomodoro dla danego zadania
-  // const handlePomodoroInput = (valuePom: number) => {
-  //   setPomodoroCount(valuePom);
-  // };
-
-  const showTaskForm = () => {
-    setIsAddingTask(true);
-  };
-  //zmienić z index
-  // const handleChangeIsDoneValue = (taskIndex) => {
-  //     const updatedTask = tasks.map((task, index) =>
-  //         taskIndex === index ? { ...task, isDone: !task.isDone } : task
-  //     );
-  //     setTasks(updatedTask);
-  // }
+  //czy jeśli funkcja jest używana tylko w tym komponencie to również mam ją wynosić?
   const handleChangeIsDoneValue = (taskId: number) => {
     setTasks((oldTasks) =>
       oldTasks.map((task) =>
@@ -144,44 +32,6 @@ export default function Checklist({
       )
     );
   };
-
-  // const increasePomodoroCount = () => {
-  //   setPomodoroCount((prevCount) => prevCount + 1);
-  // };
-
-  // const decreasePomodoroCount = () => {
-  //   setPomodoroCount((prevCount) => Math.max(prevCount - 1, 1));
-  // };
-
-  const whichLiElementIsClicked = (taskId: number) => {
-    setClickedLiElementIndex(taskId);
-    console.log(clickedLiElementIndex);
-    console.log(tasks);
-  };
-
-  //------------------------------------------------------------
-  const handleAddSubtask = (parentTaskId: number, subtaskText: string[]) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === parentTaskId
-          ? {
-              ...task,
-              subtasks: [
-                ...(task.subtasks || []),
-                ...subtaskText.map((text, index) => ({
-                  id: (task.subtasks?.length || 0) + index + 1,
-                  text,
-                  pomodoroCount: 1,
-                  completedPomodoros: 0,
-                  isDone: false,
-                })),
-              ],
-            }
-          : task
-      )
-    );
-  };
-  //--------------------------------------------------------------
 
   //otwieranie i zamykanie input subtask
   const [activeSubtaskId, setActiveSubtaskId] = useState<number | null>(null); //id zadania z otwartym inputem do wpisania subtasków
@@ -254,7 +104,8 @@ export default function Checklist({
                 <li
                   key={task.id}
                   className={`checklist__task-item ${clickedLiElementIndex === task.id ? "clicked-li-element" : ""}`}
-                  onClick={() => whichLiElementIsClicked(task.id)}
+                  // onClick={() => whichLiElementIsClicked(task.id)}
+                  onClick={() => setClickedLiElementIndex(task.id)}
                 >
                   <div className="task-item__left-site">
                     <input
@@ -339,17 +190,7 @@ export default function Checklist({
       </div>
 
       {/* Renderowanie warunkowe formularza do dodawania zadań */}
-      {isTaskFormOpen && (
-        <TaskForm
-        // addTask={addTask}
-        // handleTaskInputChange={handleTaskInputChange}
-        // newTask={newTask}
-        // pomodoroCount={pomodoroCount}
-        // handlePomodoroInput={handlePomodoroInput}
-        // increasePomodoroCount={increasePomodoroCount}
-        // decreasePomodoroCount={decreasePomodoroCount}
-        />
-      )}
+      {isTaskFormOpen && <TaskForm />}
 
       {isTaskFormOpen || (
         // <button className="add-task-btn" onClick={showTaskForm}>
@@ -365,5 +206,3 @@ export default function Checklist({
     </div>
   );
 }
-
-// zrobiłam funckję spisującą input subtaska do stanu subtasktext teraz musze zrobić funkcję wpychającą ten tekst do danego taska jego subtaska
